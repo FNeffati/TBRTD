@@ -169,8 +169,7 @@ class Util {
         "Dade City", "Holiday", "Hudson", "Lacoochee", "Land O Lakes", "New Port Richey", "Port Richey",
         "Saint Leo", "San Antonio", "Spring Hill", "Trilby", "Wesley Chapel", "Zephyrhills", "fl",
         "florida", "swfl", "floridas"].map(location => location.toLowerCase());
-
-    static stopWords = ['raw', 'septic', 'chemicals', 'discharges', 'discharge', 'storm water', 'algae',
+    static stopWords = ['@govrondesantis', 'raw', 'septic', 'chemicals', 'discharges', 'discharge', 'storm water', 'algae',
         'sewage', 'reclaimed water', 'crude', 'sewer', 'pumping', 'toxic', 'tar ball', 'sea',
         'pumps', 'discharged', 'cyanobacteria', 'oil', 'overflow', 'bay', 'blue green algae',
         'lake', 'chemical', 'leaking', 'beach', 'petroleum', 'lyngbya', 'kbrevis', 'dumping',
@@ -183,12 +182,12 @@ class Util {
         'algae bloom',
         'blue green algal', 'raw sewage', 'oil leaks', 'oil spillage', 'county',
         'hillsborough',
-        'counties','a', 'and', 'the', 'is', 'with', 'na', 'in', 'com', 'https', 'http', '.', 'of', 'to', 'www', 'on',
+        'counties','a', 'and', 'the', 'if', 'it', 'is', 'with', 'na', 'in', 'com', 'https', 'http', '.', 'of', 'to', 'www', 'on',
         "https", "http", "video", "image", "photo", "'", "news", "html", "com", "www",
         "storylink",
         "usf", "wusf", "edu", "red", "tide", "redtide", "cameron", "camerin", "herrin",
         "camerinherrin","cameronherrin", "justice",
-        'rt', 'at', '!', '$', '%', '(', ')', '.', ':', ';', '?', ',', '[', ']', '{', '|', '}'];
+        'rt', 'at', '!', '$', '%', '(', ')', '.', ':', ';', '?','#', ',', '[', ']', '{', '|', '}', 'or', 'i', '-', '&amp;'];
 
     static countWords(wordList) {
         const termCounts = wordList.reduce((counts, token) => {
@@ -204,18 +203,15 @@ class Util {
 
     static regularWordCloud(tweets) {
         const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
-
         const geoTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
         const politTermsPattern = /\b(democrat|democratic|republican|gop|demcastfl|vote blue|vote red|red wave|blue wave|right wing|left wing|far right|far left|extreme right|extreme left|supremacy|supremacist|supremacys|supremacists|terrorist|terrorism|terrorists|ron desantis|desantis|remove ron|deathsantis|rick scott|red tide rick|marco rubio|rubio|bill nelson|donald trump|trump|mike pence|pence|joe biden|biden|kamala harris|crist|charlie christ|andrew gillum|gillum|kriseman|richard kriseman|ken welch|george cretekos|cretekos|buckhorn|bob buckhorn|jane castor|castor|john holic|holic|ron feinsod)\b/gi;
         const redTideTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
 
-        const placeholder = 'na';
+        const placeholder = '';
         const replacedText = flattenedText.replace(geoTermsPattern, placeholder)
             .replace(politTermsPattern, placeholder)
             .replace(redTideTermsPattern, placeholder);
-
         const filteredWords = replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase()));
-
         return Util.countWords(filteredWords);
     }
 

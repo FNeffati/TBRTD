@@ -39,21 +39,6 @@ def get_tweets():
     return tweets
 
 
-# @app.route('/get_terms', methods=['POST'])
-# def get_terms():
-#     request_body = request.get_json()
-#
-#     type_of_cloud = request_body[0]
-#     tweets = request_body[1]
-#     if len(type_of_cloud) == 0:
-#         type_of_cloud = "Non-Geo Tags"
-#     if len(type_of_cloud) == 1:
-#         type_of_cloud = type_of_cloud[0]
-#
-#     result = analysis.get_key_words_frequency(tweets, type_of_cloud)
-#     return result
-
-
 @app.route('/get_counts', methods=['POST'])
 def get_counts():
     request_body = request.get_json()

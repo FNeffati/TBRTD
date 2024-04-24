@@ -1,0 +1,89 @@
+/**
+ * @license
+ * Copyright 2011 Dan Vanderkam (danvdk@gmail.com)
+ * MIT-licenced: https://opensource.org/licenses/MIT
+ */
+
+/**
+ * @fileoverview A wrapper around the Dygraph class which implements the
+ * interface for a GViz (aka Google Visualization API) visualization.
+ * It is designed to be a drop-in replacement for Google's AnnotatedTimeline,
+ * so the documentation at
+ * http://code.google.com/apis/chart/interactive/docs/gallery/annotatedtimeline.html
+ * translates over directly.
+ *
+ * For a full demo, see:
+ * - http://dygraphs.com/tests/gviz.html
+ * - http://dygraphs.com/tests/annotation-gviz.html
+ */
+
+/*global Dygraph:false */
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+var _dygraph = _interopRequireDefault(require("./dygraph"));
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+/**
+ * A wrapper around Dygraph that implements the gviz API.
+ * @param {!HTMLDivElement} container The DOM object the visualization should
+ *     live in.
+ * @constructor
+ */
+var GVizChart = function GVizChart(container) {
+  this.container = container;
+};
+
+/**
+ * @param {GVizDataTable} data
+ * @param {Object.<*>} options
+ */
+GVizChart.prototype.draw = function (data, options) {
+  // Clear out any existing dygraph.
+  // TODO(danvk): would it make more sense to simply redraw using the current
+  // date_graph object?
+  this.container.innerHTML = '';
+  if (typeof this.date_graph != 'undefined') {
+    this.date_graph.destroy();
+  }
+  this.date_graph = new _dygraph["default"](this.container, data, options);
+};
+
+/**
+ * Google charts compatible setSelection
+ * Only row selection is supported, all points in the row will be highlighted
+ * @param {Array.<{row:number}>} selection_array array of the selected cells
+ * @public
+ */
+GVizChart.prototype.setSelection = function (selection_array) {
+  var row = false;
+  if (selection_array.length) {
+    row = selection_array[0].row;
+  }
+  this.date_graph.setSelection(row);
+};
+
+/**
+ * Google charts compatible getSelection implementation
+ * @return {Array.<{row:number,column:number}>} array of the selected cells
+ * @public
+ */
+GVizChart.prototype.getSelection = function () {
+  var selection = [];
+  var row = this.date_graph.getSelection();
+  if (row < 0) return selection;
+  var points = this.date_graph.layout_.points;
+  for (var setIdx = 0; setIdx < points.length; ++setIdx) {
+    selection.push({
+      row: row,
+      column: setIdx + 1
+    });
+  }
+  return selection;
+};
+var _default = GVizChart;
+exports["default"] = _default;
+module.exports = exports.default;
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJuYW1lcyI6WyJHVml6Q2hhcnQiLCJjb250YWluZXIiLCJwcm90b3R5cGUiLCJkcmF3IiwiZGF0YSIsIm9wdGlvbnMiLCJpbm5lckhUTUwiLCJkYXRlX2dyYXBoIiwiZGVzdHJveSIsIkR5Z3JhcGgiLCJzZXRTZWxlY3Rpb24iLCJzZWxlY3Rpb25fYXJyYXkiLCJyb3ciLCJsZW5ndGgiLCJnZXRTZWxlY3Rpb24iLCJzZWxlY3Rpb24iLCJwb2ludHMiLCJsYXlvdXRfIiwic2V0SWR4IiwicHVzaCIsImNvbHVtbiJdLCJzb3VyY2VzIjpbIi4uL3NyYy9keWdyYXBoLWd2aXouanMiXSwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBAbGljZW5zZVxuICogQ29weXJpZ2h0IDIwMTEgRGFuIFZhbmRlcmthbSAoZGFudmRrQGdtYWlsLmNvbSlcbiAqIE1JVC1saWNlbmNlZDogaHR0cHM6Ly9vcGVuc291cmNlLm9yZy9saWNlbnNlcy9NSVRcbiAqL1xuXG4vKipcbiAqIEBmaWxlb3ZlcnZpZXcgQSB3cmFwcGVyIGFyb3VuZCB0aGUgRHlncmFwaCBjbGFzcyB3aGljaCBpbXBsZW1lbnRzIHRoZVxuICogaW50ZXJmYWNlIGZvciBhIEdWaXogKGFrYSBHb29nbGUgVmlzdWFsaXphdGlvbiBBUEkpIHZpc3VhbGl6YXRpb24uXG4gKiBJdCBpcyBkZXNpZ25lZCB0byBiZSBhIGRyb3AtaW4gcmVwbGFjZW1lbnQgZm9yIEdvb2dsZSdzIEFubm90YXRlZFRpbWVsaW5lLFxuICogc28gdGhlIGRvY3VtZW50YXRpb24gYXRcbiAqIGh0dHA6Ly9jb2RlLmdvb2dsZS5jb20vYXBpcy9jaGFydC9pbnRlcmFjdGl2ZS9kb2NzL2dhbGxlcnkvYW5ub3RhdGVkdGltZWxpbmUuaHRtbFxuICogdHJhbnNsYXRlcyBvdmVyIGRpcmVjdGx5LlxuICpcbiAqIEZvciBhIGZ1bGwgZGVtbywgc2VlOlxuICogLSBodHRwOi8vZHlncmFwaHMuY29tL3Rlc3RzL2d2aXouaHRtbFxuICogLSBodHRwOi8vZHlncmFwaHMuY29tL3Rlc3RzL2Fubm90YXRpb24tZ3Zpei5odG1sXG4gKi9cblxuLypnbG9iYWwgRHlncmFwaDpmYWxzZSAqL1xuXCJ1c2Ugc3RyaWN0XCI7XG5cbmltcG9ydCBEeWdyYXBoIGZyb20gJy4vZHlncmFwaCc7XG5cbi8qKlxuICogQSB3cmFwcGVyIGFyb3VuZCBEeWdyYXBoIHRoYXQgaW1wbGVtZW50cyB0aGUgZ3ZpeiBBUEkuXG4gKiBAcGFyYW0geyFIVE1MRGl2RWxlbWVudH0gY29udGFpbmVyIFRoZSBET00gb2JqZWN0IHRoZSB2aXN1YWxpemF0aW9uIHNob3VsZFxuICogICAgIGxpdmUgaW4uXG4gKiBAY29uc3RydWN0b3JcbiAqL1xudmFyIEdWaXpDaGFydCA9IGZ1bmN0aW9uKGNvbnRhaW5lcikge1xuICB0aGlzLmNvbnRhaW5lciA9IGNvbnRhaW5lcjtcbn07XG5cbi8qKlxuICogQHBhcmFtIHtHVml6RGF0YVRhYmxlfSBkYXRhXG4gKiBAcGFyYW0ge09iamVjdC48Kj59IG9wdGlvbnNcbiAqL1xuR1ZpekNoYXJ0LnByb3RvdHlwZS5kcmF3ID0gZnVuY3Rpb24oZGF0YSwgb3B0aW9ucykge1xuICAvLyBDbGVhciBvdXQgYW55IGV4aXN0aW5nIGR5Z3JhcGguXG4gIC8vIFRPRE8oZGFudmspOiB3b3VsZCBpdCBtYWtlIG1vcmUgc2Vuc2UgdG8gc2ltcGx5IHJlZHJhdyB1c2luZyB0aGUgY3VycmVudFxuICAvLyBkYXRlX2dyYXBoIG9iamVjdD9cbiAgdGhpcy5jb250YWluZXIuaW5uZXJIVE1MID0gJyc7XG4gIGlmICh0eXBlb2YodGhpcy5kYXRlX2dyYXBoKSAhPSAndW5kZWZpbmVkJykge1xuICAgIHRoaXMuZGF0ZV9ncmFwaC5kZXN0cm95KCk7XG4gIH1cblxuICB0aGlzLmRhdGVfZ3JhcGggPSBuZXcgRHlncmFwaCh0aGlzLmNvbnRhaW5lciwgZGF0YSwgb3B0aW9ucyk7XG59O1xuXG4vKipcbiAqIEdvb2dsZSBjaGFydHMgY29tcGF0aWJsZSBzZXRTZWxlY3Rpb25cbiAqIE9ubHkgcm93IHNlbGVjdGlvbiBpcyBzdXBwb3J0ZWQsIGFsbCBwb2ludHMgaW4gdGhlIHJvdyB3aWxsIGJlIGhpZ2hsaWdodGVkXG4gKiBAcGFyYW0ge0FycmF5Ljx7cm93Om51bWJlcn0+fSBzZWxlY3Rpb25fYXJyYXkgYXJyYXkgb2YgdGhlIHNlbGVjdGVkIGNlbGxzXG4gKiBAcHVibGljXG4gKi9cbkdWaXpDaGFydC5wcm90b3R5cGUuc2V0U2VsZWN0aW9uID0gZnVuY3Rpb24oc2VsZWN0aW9uX2FycmF5KSB7XG4gIHZhciByb3cgPSBmYWxzZTtcbiAgaWYgKHNlbGVjdGlvbl9hcnJheS5sZW5ndGgpIHtcbiAgICByb3cgPSBzZWxlY3Rpb25fYXJyYXlbMF0ucm93O1xuICB9XG4gIHRoaXMuZGF0ZV9ncmFwaC5zZXRTZWxlY3Rpb24ocm93KTtcbn07XG5cbi8qKlxuICogR29vZ2xlIGNoYXJ0cyBjb21wYXRpYmxlIGdldFNlbGVjdGlvbiBpbXBsZW1lbnRhdGlvblxuICogQHJldHVybiB7QXJyYXkuPHtyb3c6bnVtYmVyLGNvbHVtbjpudW1iZXJ9Pn0gYXJyYXkgb2YgdGhlIHNlbGVjdGVkIGNlbGxzXG4gKiBAcHVibGljXG4gKi9cbkdWaXpDaGFydC5wcm90b3R5cGUuZ2V0U2VsZWN0aW9uID0gZnVuY3Rpb24oKSB7XG4gIHZhciBzZWxlY3Rpb24gPSBbXTtcblxuICB2YXIgcm93ID0gdGhpcy5kYXRlX2dyYXBoLmdldFNlbGVjdGlvbigpO1xuXG4gIGlmIChyb3cgPCAwKSByZXR1cm4gc2VsZWN0aW9uO1xuXG4gIHZhciBwb2ludHMgPSB0aGlzLmRhdGVfZ3JhcGgubGF5b3V0Xy5wb2ludHM7XG4gIGZvciAodmFyIHNldElkeCA9IDA7IHNldElkeCA8IHBvaW50cy5sZW5ndGg7ICsrc2V0SWR4KSB7XG4gICAgc2VsZWN0aW9uLnB1c2goe3Jvdzogcm93LCBjb2x1bW46IHNldElkeCArIDF9KTtcbiAgfVxuXG4gIHJldHVybiBzZWxlY3Rpb247XG59O1xuXG5leHBvcnQgZGVmYXVsdCBHVml6Q2hhcnQ7XG4iXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsWUFBWTs7QUFBQztFQUFBO0FBQUE7QUFBQTtBQUViO0FBQWdDO0FBRWhDO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLElBQUlBLFNBQVMsR0FBRyxTQUFaQSxTQUFTLENBQVlDLFNBQVMsRUFBRTtFQUNsQyxJQUFJLENBQUNBLFNBQVMsR0FBR0EsU0FBUztBQUM1QixDQUFDOztBQUVEO0FBQ0E7QUFDQTtBQUNBO0FBQ0FELFNBQVMsQ0FBQ0UsU0FBUyxDQUFDQyxJQUFJLEdBQUcsVUFBU0MsSUFBSSxFQUFFQyxPQUFPLEVBQUU7RUFDakQ7RUFDQTtFQUNBO0VBQ0EsSUFBSSxDQUFDSixTQUFTLENBQUNLLFNBQVMsR0FBRyxFQUFFO0VBQzdCLElBQUksT0FBTyxJQUFJLENBQUNDLFVBQVcsSUFBSSxXQUFXLEVBQUU7SUFDMUMsSUFBSSxDQUFDQSxVQUFVLENBQUNDLE9BQU8sRUFBRTtFQUMzQjtFQUVBLElBQUksQ0FBQ0QsVUFBVSxHQUFHLElBQUlFLG1CQUFPLENBQUMsSUFBSSxDQUFDUixTQUFTLEVBQUVHLElBQUksRUFBRUMsT0FBTyxDQUFDO0FBQzlELENBQUM7O0FBRUQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0FMLFNBQVMsQ0FBQ0UsU0FBUyxDQUFDUSxZQUFZLEdBQUcsVUFBU0MsZUFBZSxFQUFFO0VBQzNELElBQUlDLEdBQUcsR0FBRyxLQUFLO0VBQ2YsSUFBSUQsZUFBZSxDQUFDRSxNQUFNLEVBQUU7SUFDMUJELEdBQUcsR0FBR0QsZUFBZSxDQUFDLENBQUMsQ0FBQyxDQUFDQyxHQUFHO0VBQzlCO0VBQ0EsSUFBSSxDQUFDTCxVQUFVLENBQUNHLFlBQVksQ0FBQ0UsR0FBRyxDQUFDO0FBQ25DLENBQUM7O0FBRUQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBWixTQUFTLENBQUNFLFNBQVMsQ0FBQ1ksWUFBWSxHQUFHLFlBQVc7RUFDNUMsSUFBSUMsU0FBUyxHQUFHLEVBQUU7RUFFbEIsSUFBSUgsR0FBRyxHQUFHLElBQUksQ0FBQ0wsVUFBVSxDQUFDTyxZQUFZLEVBQUU7RUFFeEMsSUFBSUYsR0FBRyxHQUFHLENBQUMsRUFBRSxPQUFPRyxTQUFTO0VBRTdCLElBQUlDLE1BQU0sR0FBRyxJQUFJLENBQUNULFVBQVUsQ0FBQ1UsT0FBTyxDQUFDRCxNQUFNO0VBQzNDLEtBQUssSUFBSUUsTUFBTSxHQUFHLENBQUMsRUFBRUEsTUFBTSxHQUFHRixNQUFNLENBQUNILE1BQU0sRUFBRSxFQUFFSyxNQUFNLEVBQUU7SUFDckRILFNBQVMsQ0FBQ0ksSUFBSSxDQUFDO01BQUNQLEdBQUcsRUFBRUEsR0FBRztNQUFFUSxNQUFNLEVBQUVGLE1BQU0sR0FBRztJQUFDLENBQUMsQ0FBQztFQUNoRDtFQUVBLE9BQU9ILFNBQVM7QUFDbEIsQ0FBQztBQUFDLGVBRWFmLFNBQVM7QUFBQTtBQUFBIn0=

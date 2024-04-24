@@ -1,0 +1,37 @@
+.time-frame-selector {
+    font-family: Arial, sans-serif;
+    width: 200px;
+    position: relative;
+    display: flex;
+
+}
+
+.time-frame-selector label {
+    background-color: #f1f1f1;
+    color: #333;
+    padding: 10px 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.time-frame-selector input[type="date"] {
+    background-color: #f9f9f9;
+    border: none;
+    padding: 12px 16px;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.time-frame-selector input[type="date"]:hover {
+    background-color: #f1f1f1;
+}
+
+.time-frame-selector input[type="date"]:focus {
+    outline: none;
+    background-color: #f1f1f1;
+    box-shadow: 0px 0px 5px #888;
+}

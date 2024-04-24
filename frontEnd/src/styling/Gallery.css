@@ -1,0 +1,20 @@
+.Arrow_Container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.Left_Arrow,
+.Right_Arrow {
+    font-size: 2rem;
+    padding: 0.5rem;
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.Left_Arrow.disabled,
+.Right_Arrow.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -46,11 +46,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord}) {
                     const dateB = new Date(b.time.$date)
                     return dateA - dateB;
                 });
-                console.log(tweetsSorted)
-
                 setTweets(tweetsSorted);
-                console.log("Twitter Scroller: ")
-                console.log(data.length)
                 onTweetsFetched(data);
                 setCurrentPage(1);
             })

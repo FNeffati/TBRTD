@@ -56,7 +56,7 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
 
     const callbacks = useMemo(
         () => ({
-            onWordClick: (word) => onWordCloudClick('#'+word.text)
+            onWordClick: (word) => onWordCloudClick(word.text)
         }),
         []
     );

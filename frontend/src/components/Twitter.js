@@ -9,6 +9,26 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord}) {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
 
+    const formatDate = (dateObj) => {
+        let isoDateString;
+        if (typeof dateObj === 'object' && dateObj.hasOwnProperty('$date')) {
+            isoDateString = dateObj['$date'];
+        } else {
+            isoDateString = dateObj;
+        }
+
+        const date = new Date(isoDateString);
+        if (isNaN(date.getTime())) {
+            console.error("Invalid Date:", isoDateString);
+            return "Invalid Date";
+        }
+
+        return date.toLocaleDateString("en-US", {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
 
     const fetchTweets = () => {
         fetch('/get_tweets',
@@ -21,7 +41,14 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord}) {
             })
             .then((response) => response.json())
             .then((data) => {
-                setTweets(data);
+                const tweetsSorted = data.sort((a, b) => {
+                    const dateA = new Date(a.time.$date)
+                    const dateB = new Date(b.time.$date)
+                    return dateA - dateB;
+                });
+                console.log(tweetsSorted)
+
+                setTweets(tweetsSorted);
                 console.log("Twitter Scroller: ")
                 console.log(data.length)
                 onTweetsFetched(data);
@@ -50,26 +77,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord}) {
     const currentTweets = filteredTweets.slice(indexOfFirstTweet, indexOfLastTweet);
     const totalPages = Math.ceil(filteredTweets.length / tweetsPerPage);
 
-    const formatDate = (dateObj) => {
-        let isoDateString;
-        if (typeof dateObj === 'object' && dateObj.hasOwnProperty('$date')) {
-            isoDateString = dateObj['$date'];
-        } else {
-            isoDateString = dateObj;
-        }
-
-        const date = new Date(isoDateString);
-        if (isNaN(date.getTime())) {
-            console.error("Invalid Date:", isoDateString);
-            return "Invalid Date";
-        }
-
-        return date.toLocaleDateString("en-US", {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    };
 
     useEffect(() =>{
         setSearchTerm(clickedWord)

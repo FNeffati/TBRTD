@@ -1,3 +1,5 @@
+const repl = require("repl");
+
 class Util {
 
     static locations = ['Alligator Point', 'Amelia City', 'Amelia Island', 'American Beach', "Anna Maria Island",
@@ -203,14 +205,31 @@ class Util {
 
     static regularWordCloud(tweets) {
         const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
-        const geoTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
-        const politTermsPattern = /\b(democrat|democratic|republican|gop|demcastfl|vote blue|vote red|red wave|blue wave|right wing|left wing|far right|far left|extreme right|extreme left|supremacy|supremacist|supremacys|supremacists|terrorist|terrorism|terrorists|ron desantis|desantis|remove ron|deathsantis|rick scott|red tide rick|marco rubio|rubio|bill nelson|donald trump|trump|mike pence|pence|joe biden|biden|kamala harris|crist|charlie christ|andrew gillum|gillum|kriseman|richard kriseman|ken welch|george cretekos|cretekos|buckhorn|bob buckhorn|jane castor|castor|john holic|holic|ron feinsod)\b/gi;
-        const redTideTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
 
-        const placeholder = '';
-        const replacedText = flattenedText.replace(geoTermsPattern, placeholder)
-            .replace(politTermsPattern, placeholder)
-            .replace(redTideTermsPattern, placeholder);
+        // Defining patterns
+        //"RT @username:" & "@username"
+        const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
+        const usernamePattern = /@[A-Za-z0-9._-]+/g;
+        let replacedText = flattenedText.replace(RTPattern, '').replace(usernamePattern, '').trim();
+
+        // punctuation
+        const punctuationPattern = /[^\w\s]|_/g
+        replacedText = replacedText.replace(' ', '').replace(punctuationPattern, '')
+
+
+        // let replacedText = flattenedText.replace(RTPattern, '').replace(usernamePattern, '')
+
+        // const geoTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
+        // const politTermsPattern = /\b(democrat|democratic|republican|gop|demcastfl|vote blue|vote red|red wave|blue wave|right wing|left wing|far right|far left|extreme right|extreme left|supremacy|supremacist|supremacys|supremacists|terrorist|terrorism|terrorists|ron desantis|desantis|remove ron|deathsantis|rick scott|red tide rick|marco rubio|rubio|bill nelson|donald trump|trump|mike pence|pence|joe biden|biden|kamala harris|crist|charlie christ|andrew gillum|gillum|kriseman|richard kriseman|ken welch|george cretekos|cretekos|buckhorn|bob buckhorn|jane castor|castor|john holic|holic|ron feinsod)\b/gi;
+        // const redTideTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
+        //
+        // const placeholder = '';
+        // const replacedText = flattenedText.replace(geoTermsPattern, placeholder)
+        //     .replace(politTermsPattern, placeholder)
+        //     .replace(redTideTermsPattern, placeholder)
+        //     .replace(RTPattern, placeholder);
+
+        // const lemmatizer = require('wink-lemmatizer')
         const filteredWords = replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase()));
         return Util.countWords(filteredWords);
     }

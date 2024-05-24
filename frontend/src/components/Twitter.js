@@ -44,7 +44,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord}) {
                 const tweetsSorted = data.sort((a, b) => {
                     const dateA = new Date(a.time.$date)
                     const dateB = new Date(b.time.$date)
-                    return dateA - dateB;
+                    return dateB -  dateA;
                 });
                 setTweets(tweetsSorted);
                 onTweetsFetched(data);

@@ -1,4 +1,4 @@
-const repl = require("repl");
+const {removeStopwords} = require("stopword");
 
 class Util {
 
@@ -170,7 +170,7 @@ class Util {
         "Safety Harbor", "Saint Petersburg", "Seminole", "Tarpon Springs", "Aripeka", "Crystal Springs",
         "Dade City", "Holiday", "Hudson", "Lacoochee", "Land O Lakes", "New Port Richey", "Port Richey",
         "Saint Leo", "San Antonio", "Spring Hill", "Trilby", "Wesley Chapel", "Zephyrhills", "fl",
-        "florida", "swfl", "floridas"].map(location => location.toLowerCase());
+        "florida", "swfl", "floridas", "manateecounty", "annamariaisland", "siestakey", "stpete", "sanibel", "everglades", "fortmyersbeach","manasotakey", "sarasotabay", "fortmyers", "lakeokeechobee", "bradentonbeach","formyers", "bocagrande","siesta", "florda", "srq", "sarastoabay", "stpetersburg", "tampabay", "pinellascounty", "pineypoint", "clearwaterbeach", "capecoral", "gulfofmexico","portcharlotte",""].map(location => location.toLowerCase());
     static stopWords = ['@govrondesantis', 'raw', 'septic', 'chemicals', 'discharges', 'discharge', 'storm water', 'algae',
         'sewage', 'reclaimed water', 'crude', 'sewer', 'pumping', 'toxic', 'tar ball', 'sea',
         'pumps', 'discharged', 'cyanobacteria', 'oil', 'overflow', 'bay', 'blue green algae',
@@ -189,7 +189,7 @@ class Util {
         "storylink",
         "usf", "wusf", "edu", "red", "tide", "redtide", "cameron", "camerin", "herrin",
         "camerinherrin","cameronherrin", "justice",
-        'rt', 'at', '!', '$', '%', '(', ')', '.', ':', ';', '?','#', ',', '[', ']', '{', '|', '}', 'or', 'i', '-', '&amp;'];
+        'rt', 'at', '!', '$', '%', '(', ')', '.', ':', ';', '?','#', ',', '[', ']', '{', '|', '}', 'or', 'i', '-', '&amp;', 'justiceforcameronherrin'];
 
     static countWords(wordList) {
         const termCounts = wordList.reduce((counts, token) => {
@@ -201,7 +201,6 @@ class Util {
         wordFrequencyArray.sort((a, b) => b.value - a.value);
         return wordFrequencyArray.slice(0, 200);
     }
-
 
     static regularWordCloud(tweets) {
         const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
@@ -216,9 +215,12 @@ class Util {
         const punctuationPattern = /[^\w\s]|_/g
         replacedText = replacedText.replace(' ', '').replace(punctuationPattern, '')
 
+        const { removeStopwords } = require('stopword')
+        const filteredWords = removeStopwords(replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase())));
+
+        // console.log(removeStopwords(replacedText))
 
         // let replacedText = flattenedText.replace(RTPattern, '').replace(usernamePattern, '')
-
         // const geoTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
         // const politTermsPattern = /\b(democrat|democratic|republican|gop|demcastfl|vote blue|vote red|red wave|blue wave|right wing|left wing|far right|far left|extreme right|extreme left|supremacy|supremacist|supremacys|supremacists|terrorist|terrorism|terrorists|ron desantis|desantis|remove ron|deathsantis|rick scott|red tide rick|marco rubio|rubio|bill nelson|donald trump|trump|mike pence|pence|joe biden|biden|kamala harris|crist|charlie christ|andrew gillum|gillum|kriseman|richard kriseman|ken welch|george cretekos|cretekos|buckhorn|bob buckhorn|jane castor|castor|john holic|holic|ron feinsod)\b/gi;
         // const redTideTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
@@ -230,12 +232,14 @@ class Util {
         //     .replace(RTPattern, placeholder);
 
         // const lemmatizer = require('wink-lemmatizer')
-        const filteredWords = replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase()));
+        // const filteredWords = replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase()));
         return Util.countWords(filteredWords);
     }
 
     static geohashtagsCloud(tweets) {
-        const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
+        const punctuationPattern = /[^\w\s#]|_/g;
+        const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase().replace(punctuationPattern, ' ');
+
         const words = flattenedText.split(/\s+/);
         const hashtagPattern = /#(\w+)/g;
 
@@ -252,7 +256,9 @@ class Util {
     }
 
     static nonGeohashtagsCloud(tweets) {
-        const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
+        const punctuationPattern = /[^\w\s#]|_/g;
+        const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase().replace(punctuationPattern, ' ');
+
         const words = flattenedText.split(/\s+/);
         const hashtagPattern = /#(\w+)/g;
 
@@ -261,7 +267,7 @@ class Util {
                 const match = hashtagPattern.exec(word);
                 if (match && match.index === 0 && match[1] !== undefined) {
                     const location = match[1].toLowerCase();
-                    return !Util.locations.includes(location); // Negate to filter out words in Util.locations
+                    return !Util.locations.includes(location) && !Util.stopWords.includes(location); // Negate to filter out words in Util.locations
                 }
                 return false;
             })

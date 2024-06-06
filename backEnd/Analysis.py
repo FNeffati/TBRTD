@@ -25,7 +25,7 @@ class Analysis:
             "government": "gov",
             "academic": "acad",
             "media": "media",
-            "tourism": "tourism",
+            "tourism": "tourbiz",
             "other": "other"
         }
 

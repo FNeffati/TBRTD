@@ -1,7 +1,4 @@
-const {removeStopwords} = require("stopword");
-
 class Util {
-
     static locations = ['Alligator Point', 'Amelia City', 'Amelia Island', 'American Beach', "Anna Maria Island",
         'Anna Maria', "Anne's Beach", 'Atlantic Beach', 'Bahia Honda Key', 'Bal Harbour', 'Ballast Key',
         'Belleair Beach', 'Belleair Shore', 'Bethune Beach', 'Beverly Beach', 'Big Lagoon State Park',
@@ -108,8 +105,8 @@ class Util {
         'Blue Cypress', 'Blue (Sebring)', 'Bonnet',
         'Bonny', 'Brentwood', 'Buena Vista', 'Byrd', 'Center (Osceola County)', 'Charlotte', 'Chilton',
         'Clay', 'Clear (Orlando)', 'Clearwater', 'Clermont chain of lakes', 'Conlin', 'Counterfeit',
-        'Crescent', 'Crystal (Broward County)', 'Damon', 'Deaton', 'Deer', 'DeFuniak', 'Denton', 'Dinner',
-        'Doctors', 'Dora', 'Dot', 'East Tohopekaliga', 'Elbert', 'Ella', 'Eustis', 'Fox', 'Gable',
+        'Crescent', 'Crystal (Broward County)', 'Damon', 'Deaton', 'Deer', 'DeFuniak', 'Denton',
+        'Dora', 'East Tohopekaliga', 'Elbert', 'Ella', 'Eustis', 'Gable',
         'George', 'Glenada', 'Grassy', 'Griffin', 'Halfmoon', 'Hall', 'Harney', 'Harris', "Hell'n Blazes",
         'Henry', 'Hog', 'Lake Adelaide', 'Lake Alice', 'Alligator Lake', 'Lake Angelo', 'Lake Anoka',
         'Lake Apopka', 'Lake August', 'Lake Iamonia', 'Ingraham Lake', 'Lake Isis', 'Lake Istokpoga',
@@ -189,7 +186,15 @@ class Util {
         "storylink",
         "usf", "wusf", "edu", "red", "tide", "redtide", "cameron", "camerin", "herrin",
         "camerinherrin","cameronherrin", "justice",
-        'rt', 'at', '!', '$', '%', '(', ')', '.', ':', ';', '?','#', ',', '[', ']', '{', '|', '}', 'or', 'i', '-', '&amp;', 'justiceforcameronherrin'];
+        'rt', 'at', '!', '$', '%', '(', ')', '.', ':', ';', '?','#', ',', '[', ']', '{', '|', '}', 'or', 'i', '-', '&amp;', 'justiceforcameronherrin', "http",
+        'democrat', 'democratic', 'republican', 'ron' , '1', 'scotts', 'rick', 'scott', 'gop', 'demcastfl', 'vote blue',
+        'vote red', 'red wave', 'blue wave', 'right wing', 'left wing', 'far right', 'far left', 'extreme right', 'extreme left',
+        'supremacy', 'supremacist', 'supremacys', 'supremacists', 'terrorist', 'terrorism', 'terrorists', 'ron desantis',
+        'desantis', 'remove ron', 'deathsantis', 'rick scott', 'red tide rick', 'marco rubio', 'rubio', 'bill nelson', 'donald trump',
+        'trump', 'mike pence', 'pence', 'joe biden', 'biden', 'kamala harris', 'crist', 'charlie christ', 'andrew gillum',
+        'gillum', 'kriseman', 'richard kriseman', 'ken welch', 'george cretekos', 'cretekos', 'buckhorn', 'bob buckhorn',
+        'jane castor', 'castor', 'john holic', 'holic', 'ron feinsod', 'twitter', 'status'
+    ];
 
     static countWords(wordList) {
         const termCounts = wordList.reduce((counts, token) => {
@@ -202,7 +207,7 @@ class Util {
         return wordFrequencyArray.slice(0, 200);
     }
 
-    static regularWordCloud(tweets) {
+    static nonGeoRegularTermWordCloud(tweets) {
         const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
 
         // Defining patterns
@@ -216,9 +221,8 @@ class Util {
         replacedText = replacedText.replace(' ', '').replace(punctuationPattern, '')
 
         const { removeStopwords } = require('stopword')
-        const filteredWords = removeStopwords(replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase())));
-
-        // console.log(removeStopwords(replacedText))
+        let filteredWords = removeStopwords(replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase())));
+        filteredWords = filteredWords.filter(word => !Util.locations.includes(word.toLowerCase()))
 
         // let replacedText = flattenedText.replace(RTPattern, '').replace(usernamePattern, '')
         // const geoTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
@@ -233,6 +237,26 @@ class Util {
 
         // const lemmatizer = require('wink-lemmatizer')
         // const filteredWords = replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase()));
+        return Util.countWords(filteredWords);
+    }
+
+    static geoRegularTermWordCloud(tweets) {
+        const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
+
+        // Defining patterns
+        //"RT @username:" & "@username"
+        const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
+        const usernamePattern = /@[A-Za-z0-9._-]+/g;
+        let replacedText = flattenedText.replace(RTPattern, '').replace(usernamePattern, '').trim();
+
+        // punctuation
+        const punctuationPattern = /[^\w\s]|_/g
+        replacedText = replacedText.replace(' ', '').replace(punctuationPattern, '')
+
+        const { removeStopwords } = require('stopword')
+        let filteredWords = removeStopwords(replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase())));
+        filteredWords = filteredWords.filter(word => Util.locations.includes(word.toLowerCase()))
+
         return Util.countWords(filteredWords);
     }
 

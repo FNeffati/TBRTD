@@ -37,7 +37,7 @@
     margin-left: 40px;
 }
 .clear_button {
-    transform: translateY(-150%) translateX(500%);
+    transform: translateX(-100%);
     background-color: transparent;
     border: none;
     cursor: pointer;

@@ -15,10 +15,15 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
 
     useEffect(() => {
         if (tweets.length > 0) {
-            if (cloud_type.length === 0 || cloud_type[0] === 'Single Term Cloud') {
-                const top100Words = Util.regularWordCloud(tweets);
+            if (cloud_type.length === 0 || cloud_type[0] === 'Non Geo Single Terms') {
+                const top100Words = Util.nonGeoRegularTermWordCloud(tweets);
                 setWords(top100Words);
-            } else if (cloud_type[0] === "Geo Hashtags") {
+            }
+            else if (cloud_type[0] === "Geo Single Terms") {
+                const hashtags = Util.geoRegularTermWordCloud(tweets);
+                setWords(hashtags);
+            }
+            else if (cloud_type[0] === "Geo Hashtags") {
                 const hashtags = Util.geohashtagsCloud(tweets);
                 setWords(hashtags);
             }

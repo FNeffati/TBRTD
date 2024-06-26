@@ -69,9 +69,18 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         } else {
             if (!searchTerm1) return tweets;
             if (searchTerm1 !== '' || searchTerm2 !== '') {
-                return tweet.text && [searchTerm1, searchTerm2].every((term) =>
-                    tweet.text.toLowerCase().includes(term)
-                );
+                // return tweet.text && [searchTerm1, searchTerm2].every((term) =>
+                //     tweet.text.toLowerCase().includes(term)
+                // );
+                if (searchTerm1 !== '' && searchTerm2 !== ''){
+                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) || tweet.text.toLowerCase().includes(searchTerm2.toLowerCase()));
+                }
+                if (searchTerm1 !== ''){
+                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()));
+                }
+                if (searchTerm2 !== ''){
+                    return tweet.text.toLowerCase().includes(searchTerm2.toLowerCase());
+                }
             } else {
                 return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
             }
@@ -83,10 +92,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     };
 
     useEffect(() => {
-        if(searchTerm1 === ''){
-            setSearchTerm1(clickedWord);
-        }
-        else if (filterMode === 'contains'){
+        if (filterMode === 'contains'){
             if(searchTerm1 === ''){
                 setSearchTerm1(clickedWord);
             }
@@ -94,6 +100,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             else if(searchTerm2 === ''){
                 setSearchTerm2(clickedWord)
             }
+        }
+        else if(filterMode === 'exact'){
+            setSearchTerm1(clickedWord);
         }
         console.log(searchTerm1, searchTerm2)
 

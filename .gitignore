@@ -70,5 +70,7 @@ dist/
 .cache/
 public/
 
+# Python virtual environment 
+venv/
 # vue
 

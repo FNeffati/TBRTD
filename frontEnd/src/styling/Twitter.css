@@ -29,6 +29,17 @@
 
 }
 
+.tweet_interactions {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+}
+
+.tweet_interactions p {
+    margin-right: 7px;
+}
+
 .tweet_search_bar {
     padding: 8px;
     border-radius: 5px;

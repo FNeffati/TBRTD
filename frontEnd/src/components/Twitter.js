@@ -217,6 +217,14 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                     <p className="tweet_time">{formatDate(tweet.time)}</p>
                                     <p className="tweet_location">{tweet.location}</p>
                                 </div>
+
+                                <hr className="divider"/>
+
+                                <div className="tweet_interactions">
+                                    <p>Likes: {tweet.likes || 0}</p>
+                                    <p>Retweets: {tweet.retweets || 0}</p>
+                                    <p>Replies: {tweet.replies || 0}</p>
+                                </div>
                             </div>
                         ))
                     ) : (

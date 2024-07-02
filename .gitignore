@@ -72,5 +72,7 @@ public/
 
 # Python virtual environment 
 venv/
-# vue
+
+# Node Mudules
+node_modules/ 
 

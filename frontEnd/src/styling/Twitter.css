@@ -105,3 +105,13 @@
     margin: 0 10px;
 }
 
+.tweet_interactions {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+}
+.tweet_interactions p {
+    margin-right: 7px;
+}
+

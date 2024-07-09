@@ -3,9 +3,9 @@ import '../styling/ContentHeader.css';
 
 const ContentHeader = ({ title, content }) => {
     return (
-        <div className="Container">
-            <h4 className="Title">{title}</h4>
-            <p className="Body">{content}</p>
+        <div className="InfoContainer">
+            <h4 className="InfoTitle">{title}</h4>
+            <p className="InfoBody">{content}</p>
         </div>
     );
 };

@@ -47,6 +47,7 @@
     border: 1px solid #ddd;
     width: 450px;
     margin-left: 40px;
+    margin-top: 40px;
 }
 .clear_button {
     transform: translateX(-100%);

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../styling/Twitter.css";
+import ContentHeader from "./ContentHeader";
 import defaultAvatar from '../assets/avatar.jpg';
 
 function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
@@ -134,6 +135,8 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
 
     return (
         <div className="twitter_container">
+            <div className="tweets_info">      
+            </div>
             <div className="tweets_header">
                 <div className="search_bar_container">
                     {filterMode === 'exact' && (

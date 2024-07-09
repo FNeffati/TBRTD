@@ -6,6 +6,7 @@ import Twitter from "./components/Twitter";
 import {useState} from "react";
 import WordCloud from "./components/WordCloud";
 import GallerySwitch from "./components/Gallery";
+import ContentHeader from './components/ContentHeader';
 
 function App() {
 
@@ -66,12 +67,18 @@ function App() {
             </div>
             <div className="Body">
                 <div className="Twitter_container">
+                    <ContentHeader 
+                        title="Tweet Display" 
+                        content="Shows individual tweets related to red tide in the Tampa Bay area. Includes tweet content, date, location, and engagement metrics." 
+                    />
                     <Twitter selectedFilters={selectedFilters} onTweetsFetched={handleTweets} clickedWord={clickedWord} />
                 </div>
                 <div className="Word_Cloud_container">
+                    <ContentHeader title={"Word Cloud"} content={"Click on a word to see the tweets that contain it. Clicking a word will override your current search term."}/>
                     <WordCloud cloud_type={selectedFilters.wordCloud} tweets={tweets} onWordCloudClick={handleWordClick} />
                 </div>
                 <div className="Map_container">
+                    <ContentHeader title={"Map / Time Series"} content={"Explore the data with visual representations of tweets over time (Time-Series) and county of origin (Map)."}/>
                     <GallerySwitch account_types={selectedFilters.accountType} date={selectedFilters.timeFrame} />
                 </div>
             </div>

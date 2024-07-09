@@ -1,7 +1,9 @@
 import React, {useEffect, useMemo, useState} from "react";
 import ReactWordcloud from "react-wordcloud";
+import "../styling/WordCloud.css";
 import 'tippy.js/dist/tippy.css';
 import Util from './analysis';
+import ContentHeader from "./ContentHeader";
 
 
 const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
@@ -71,6 +73,8 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
     return (
         <div className="word-cloud-container">
             <div className="loading">{loading && <p>Loading...</p>}</div>
+            <div className="word-cloud-info">
+            </div>
             <div className="word-cloud">
                 <ReactWordcloud  words={words} options={options} size={size} padding={0} callbacks={callbacks}/>
             </div>

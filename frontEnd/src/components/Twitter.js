@@ -220,9 +220,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
 
                                 <hr className="divider"/>
 
-                                <div className="tweet_interactions">
+                                <div className=" tweet_interactions">
                                     <p>Likes: {tweet.likes || 0}</p>
-                                    <p>Retweets: {tweet.retweets || 0}</p>
+                                    <p>Retweets: {tweet.retweets | 0}</p>
                                     <p>Replies: {tweet.replies || 0}</p>
                                 </div>
                             </div>

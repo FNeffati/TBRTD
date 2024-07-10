@@ -23,19 +23,20 @@ def serve(path):
 @app.route('/get_tweets', methods=['POST'])
 def get_tweets():
     request_body = request.get_json()
+    retweets = True
     time_frame = None
     counties = None
     account_type_list = None
 
     try:
-        time_frame = request_body['timeFrame'].split(' ')
-        print(time_frame)
-        counties = request_body['county']
-        account_type_list = request_body['accountType']
+        retweets = request_body[1]['retweets']
+        time_frame = request_body[0]['timeFrame'].split(' ')
+        counties = request_body[0]['county']
+        account_type_list = request_body[0]['accountType']
     except Exception as e:
         print(e, "Something went wrong with extracting time frame and county")
 
-    tweets = analysis.get_filtered_tweets(time_frame, counties, account_type_list)
+    tweets = analysis.get_filtered_tweets(time_frame, counties, account_type_list, retweets)
     return tweets
 
 

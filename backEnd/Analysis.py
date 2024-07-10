@@ -8,9 +8,10 @@ class Analysis:
     MONGO_URI = "mongodb+srv://Neffati:y4m4SKKmoIg6riCP@cluster0.h1xa7vw.mongodb.net/?retryWrites=true&w=majority"
     connection = pymongo.MongoClient(MONGO_URI)
 
-    def get_filtered_tweets(self, time_frame=None, counties=None, account_type_list=None):
+    def get_filtered_tweets(self, time_frame=None, counties=None, account_type_list=None, retweets=True):
         """
         We want this function to filter based on requested params
+        :param retweets: Should we include retwweets?
         :param account_type_list: what type of account is sending out the tweets
         :param time_frame: this either goes in increments of 1 Day, week, month, year
                     or the user can give you a custom upper and lower bound
@@ -30,6 +31,9 @@ class Analysis:
         }
 
         if counties or account_type_list or time_frame:
+            if retweets is not None:
+                if not retweets:
+                    query["is_retweet"] = False  # This includes only original tweets
             if account_type_list:
                 if len(account_type_list) > 0:
                     current_account_types = [account_types[account.lower()] for account in account_type_list]

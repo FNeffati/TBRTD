@@ -8,6 +8,8 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const [searchTerm1, setSearchTerm1] = useState('');
     const [searchTerm2, setSearchTerm2] = useState('');
     const [filterMode, setFilterMode] = useState('exact');
+    const [containsRetweets, setContainsRetweets] = useState(true);
+    const [retweets, setRetweets] = useState("With Retweets")
 
     const formatDate = (dateObj) => {
         let isoDateString;
@@ -37,7 +39,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(selectedFilters)
+                body: JSON.stringify([selectedFilters, {"retweets":containsRetweets}])
             })
             .then((response) => response.json())
             .then((data) => {
@@ -55,23 +57,21 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
 
     useEffect(() => {
         fetchTweets();
-    }, [selectedFilters]);
+    }, [selectedFilters, containsRetweets]);
 
     const highlightText = (text, words) => {
         if (!words.length) return text;
-        const regex = new RegExp(`(${words.join('|')})`, 'gi');
+
+        const regex = new RegExp(words.filter(word => word !== '').join('|'), 'gi');
         return text.replace(regex, (match) => `<span class="highlight">${match}</span>`);
     };
+
 
     const filteredTweets = tweets.filter((tweet) => {
         if (filterMode === 'exact') {
             return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
         } else {
-            if (!searchTerm1) return tweets;
             if (searchTerm1 !== '' || searchTerm2 !== '') {
-                // return tweet.text && [searchTerm1, searchTerm2].every((term) =>
-                //     tweet.text.toLowerCase().includes(term)
-                // );
                 if (searchTerm1 !== '' && searchTerm2 !== ''){
                     return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) || tweet.text.toLowerCase().includes(searchTerm2.toLowerCase()));
                 }
@@ -90,6 +90,16 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const handleFilterChange = (event) => {
         setFilterMode(event.target.value);
     };
+    const handleContainRetweetsChange = (event) => {
+        if(event.target.value === "With Retweets"){
+            setRetweets('With Retweets')
+            setContainsRetweets(true)
+        }
+        else if(event.target.value === "Without Retweets"){
+            setRetweets('Without Retweets')
+            setContainsRetweets(false)
+        }
+    }
 
     useEffect(() => {
         if (filterMode === 'contains'){
@@ -119,7 +129,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             setCurrentPage(newPage);
         }
     };
-
     const handleBlur = () => {
         if (currentPage === '') {
             setCurrentPage(1);
@@ -185,6 +194,12 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                         <select className="filter_dropdown" value={filterMode} onChange={handleFilterChange}>
                             <option value="exact">Exact Match</option>
                             <option value="contains">Contains</option>
+                        </select>
+
+
+                        <select className="containRetweets" value={retweets} onChange={handleContainRetweetsChange}>
+                            <option value="With Retweets">With Retweets</option>
+                            <option value="Without Retweets">Without Retweets</option>
                         </select>
                     </div>
                 </div>

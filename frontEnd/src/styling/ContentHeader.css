@@ -1,0 +1,16 @@
+.InfoContainer {
+    margin-bottom: 20px;
+}
+
+.InfoTitle {
+    font-size : 1.2em;
+    font-weight : bold;
+    margin-bottom: 10px;
+    align-items: center;
+}
+
+.InfoBody{
+    font-size: 0.9em;
+    margin-bottom: 15px;
+    align-items: center;
+}

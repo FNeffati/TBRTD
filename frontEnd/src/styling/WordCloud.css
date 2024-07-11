@@ -1,0 +1,22 @@
+.word-cloud-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 45px;
+}
+
+.word-cloud-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0px;
+    padding: 10px;
+    border-radius: 8px;
+    margin-left: 20px;
+    margin-right: 20px;;
+}
+
+.word-cloud {
+    display: flex;
+}

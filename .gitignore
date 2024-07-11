@@ -72,5 +72,9 @@ dist/
 .cache/
 public/
 
-# vue
+# Python virtual environment 
+venv/
+*.pyc
 
+# Node Mudules
+node_modules/

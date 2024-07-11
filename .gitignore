@@ -72,5 +72,6 @@ dist/
 .cache/
 public/
 
-# vue
-
+# venv
+venv/
+*.pyc

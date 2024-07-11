@@ -12,8 +12,8 @@ html,body{
   display: flex;
   align-items: center;
   justify-content: space-between;
-
 }
+
 .Body{
   padding: 10px;
   display: flex;
@@ -23,15 +23,15 @@ html,body{
 
 .Twitter_container{
   width: 100%;
-  height: 100%;
+  height: 800px;
 }
 .Word_Cloud_container{
   width: 100%;
-  height: 100%;
+  height: 800px;
 }
 .Map_container{
   width: 100%;
-  height: 100%;
+  height: 800px;
 }
 
 

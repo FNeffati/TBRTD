@@ -1,11 +1,10 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Dygraph from 'dygraphs';
 import "../styling/TimeSeries.css"
 
 const TwitterTimeSeries = () => {
     const graphRef = useRef(null);
-
-    const [data, setData] = useState()
+    const [data, setData] = useState();
 
     const fetchTweets = () => {
         fetch('/get_tweets',
@@ -25,42 +24,65 @@ const TwitterTimeSeries = () => {
 
     useEffect(() =>{
         if (!data){
-            fetchTweets()
-        }
-    },[data])
-
-    useEffect(() => {
-        if (graphRef.current && data) {
-            const tweetCounts = {};
-            data.forEach((tweet) => {
-                const date = new Date(tweet.time.$date);
-                const dateString = date.toISOString().split('T')[0]; // Extract YYYY-MM-DD
-                if (!tweetCounts[dateString]) {
-                    tweetCounts[dateString] = 0;
-                }
-                tweetCounts[dateString]++;
-            });
-
-            const dyData = Object.entries(tweetCounts).map(([date, count]) => ({ date: new Date(date), count }));
-
-            dyData.sort((a, b) => a.date - b.date);
-
-            const formattedData = dyData.map(({ date, count }) => [date, count]);
-
-            new Dygraph(graphRef.current, formattedData, {
-                labels: ['Date', 'Tweet Count'],
-                showRoller: false,
-                rollPeriod: 0,
-                width: 650,
-                height: 550
-            });
+            fetchTweets();
         }
     }, [data]);
 
+    useEffect(() => {
+        if (graphRef.current && data) {
+
+            const counties = ['Sarasota', 'Manatee', 'Hillsborough', 'Pinellas', 'Pasco'];
+            const locationArrays = {};
+
+            counties.forEach((county) => {
+                locationArrays[county] = [];
+            });
 
 
-    return <div ref={graphRef} style={{width:'100%', height:'100%'}}></div>;
+            data.forEach((tweet) => {
+                const date = new Date(tweet.time.$date);
+                const dateString = date.toISOString().split('T')[0]; // Extract YYYY-MM-DD
+                const location = tweet.location;
 
+                if (locationArrays[location]) {
+                    if (!locationArrays[location][dateString]) {
+                        locationArrays[location][dateString] = 0;
+                    }
+                    locationArrays[location][dateString]++;
+                }
+            });
+
+
+            const dyData = [];
+
+
+            Object.keys(locationArrays).forEach((location) => {
+                Object.keys(locationArrays[location]).forEach((dateString) => {
+                    const date = new Date(dateString);
+                    const count = locationArrays[location][dateString];
+
+                    dyData.push([date].concat(counties.map((county) => (county === location ? count : 0))));
+                });
+            });
+
+
+            dyData.sort((a, b) => a[0] - b[0]);
+            new Dygraph(
+                graphRef.current,
+                dyData,
+                {
+                    labels: ['Date'].concat(counties),
+                    showRoller: false,
+                    rollPeriod: 0,
+                    width: 750,
+                    height: 550,
+                    colors: ['green', 'blue', 'red', 'orange', 'purple']
+                }
+            );
+        }
+    }, [data]);
+
+    return <div ref={graphRef} style={{ width: '100%', height: '100%' }}></div>;
 };
 
 export default TwitterTimeSeries;

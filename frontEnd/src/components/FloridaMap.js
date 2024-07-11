@@ -42,16 +42,39 @@ const FloridaMap = ({ date, account_types }) => {
     };
 
     const normalizedTweetCounts = normalizeTweetCounts(tweetCounts);
+    const colorMap = {
+        'Manatee': 'blue',
+        'Sarasota': 'green',
+        'Hillsborough': 'red',
+        'Pinellas': 'orange',
+        'Pasco': 'purple'
+    };
 
-    const getColor = (normalizedCount) => {
+    const rgbMap = {
+        'blue': [0, 0, 255],
+        'green': [0, 128, 0],
+        'red': [255, 0, 0],
+        'orange': [255, 165, 0],
+        'purple': [128, 0, 128]
+    };
+
+    const getColor = (countyName, normalizedCount) => {
+        const color = colorMap[countyName] || 'black';
+        const [r, g, b] = rgbMap[color];
+
         const intensity = Math.round(255 * normalizedCount);
-        return `rgb(${255}, ${255 - intensity}, ${255 - intensity})`;
+        const adjustedR = Math.min(r, r + intensity);
+        const adjustedG = Math.min(g, g + intensity);
+        const adjustedB = Math.min(b, b + intensity);
+
+        return `rgb(${adjustedR}, ${adjustedG}, ${adjustedB})`;
+        // return `rgb(${r}, ${g}, ${b})`;
     };
 
     const style = (feature) => {
         const countyName = feature.properties.NAME;
         const tweetCount = normalizedTweetCounts[countyName] || 0;
-        const fillColor = getColor(tweetCount);
+        const fillColor = getColor(countyName, tweetCount);
 
         return {
             fillColor: fillColor,
@@ -76,13 +99,13 @@ const FloridaMap = ({ date, account_types }) => {
 
     const countyMarkers = floridaCounties.features.map((feature, index) => {
         const countyName = feature.properties.NAME;
-        const coordinates = feature.geometry.coordinates[0]; // Assuming first set of coordinates is outer boundary
-        const centroid = calculateCentroid(coordinates); // Function to calculate centroid
+        const coordinates = feature.geometry.coordinates[0];
+        const centroid = calculateCentroid(coordinates);
 
         return (
             <Marker
                 key={index}
-                position={[centroid[0], centroid[1]]} // Corrected order: [latitude, longitude]
+                position={[centroid[0], centroid[1]]}
                 icon={L.divIcon({
                     className: 'county-label',
                     html: `<div>${countyName}</div>`
@@ -93,7 +116,7 @@ const FloridaMap = ({ date, account_types }) => {
 
     return (
         <div className="map_div">
-            <MapContainer center={[27.766279, -82.686783]} zoom={8} style={{ height: 650, width: '100%' }}>
+            <MapContainer center={[27.766279, -82.686783]} zoom={8} style={{ height: 400, width: '100%' }}>
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                 <GeoJSON
                     data={floridaCounties}
@@ -114,10 +137,9 @@ const FloridaMap = ({ date, account_types }) => {
     );
 };
 
-// Function to calculate centroid of polygon coordinates
 const calculateCentroid = (coordinates) => {
     if (!coordinates || !Array.isArray(coordinates) || coordinates.length === 0) {
-        return [0, 0]; // Return default coordinates if no valid coordinates are provided
+        return [0, 0];
     }
 
     let centroid = [0, 0];
@@ -125,7 +147,7 @@ const calculateCentroid = (coordinates) => {
 
     for (let i = 0; i < numPoints; i++) {
         if (!coordinates[i] || !Array.isArray(coordinates[i]) || coordinates[i].length !== 2) {
-            continue; // Skip invalid coordinates
+            continue;
         }
 
         centroid[0] += coordinates[i][1]; // Latitude

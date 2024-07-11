@@ -1,20 +1,35 @@
-.Arrow_Container {
+.Gallery {
+    width: 100%;
     display: flex;
-    justify-content: center;
-    margin-bottom: 1rem;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
 }
 
-.Left_Arrow,
-.Right_Arrow {
-    font-size: 2rem;
-    padding: 0.5rem;
-    cursor: pointer;
-    opacity: 1;
-    transition: opacity 0.3s ease;
+.Component_Container {
+    display: flex;
+    flex-direction: column; /* Horizontal arrangement */
+    width: 100%; /* Full width of the Gallery */
+    height: 70%; /* Full height of the Gallery */
+    margin-left: 20px;
 }
 
-.Left_Arrow.disabled,
-.Right_Arrow.disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+.Component1, .Component2 {
+    flex: 1; /* Each component takes up equal space */
+    height: 90%;
+    width: 90%;
+    margin-right: 10px;
+    margin-bottom: 50px;
+}
+
+.Component1 {
+    width: 80%;
+    margin-left: 56px;
+}
+
+.map {
+    height:50%;
+}
+
+.ts {
+    height:50%
 }

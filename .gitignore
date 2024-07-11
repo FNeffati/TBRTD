@@ -74,7 +74,7 @@ public/
 
 # Python virtual environment 
 venv/
+*.pyc
 
 # Node Mudules
 node_modules/
-

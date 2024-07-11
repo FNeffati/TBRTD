@@ -11,6 +11,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const [filterMode, setFilterMode] = useState('exact');
     const [containsRetweets, setContainsRetweets] = useState(true);
     const [retweets, setRetweets] = useState("With Retweets")
+    const [sortOrder, setSortOrder] = useState("Most Recent");
 
     const formatDate = (dateObj) => {
         let isoDateString;
@@ -33,6 +34,18 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         });
     };
 
+    const sortTweets = (tweetsToSort) => {
+        return tweetsToSort.sort((a, b) => {
+            if (sortOrder === "Most Recent" || sortOrder === "Least Recent") {
+                const dateA = new Date(a.time.$date);
+                const dateB = new Date(b.time.$date);
+                return sortOrder === "Most Recent" ? dateB - dateA : dateA - dateB;
+            } else if (sortOrder === "Most Likes") {
+                return (b.likes || 0) - (a.likes || 0);
+            }
+        });
+    };
+
     const fetchTweets = () => {
         fetch('/get_tweets',
             {
@@ -44,12 +57,8 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             })
             .then((response) => response.json())
             .then((data) => {
-                const tweetsSorted = data.sort((a, b) => {
-                    const dateA = new Date(a.time.$date)
-                    const dateB = new Date(b.time.$date)
-                    return dateB - dateA;
-                });
-                setTweets(tweetsSorted);
+                const sortedTweets = sortTweets(data);
+                setTweets(sortedTweets);
                 onTweetsFetched(data);
                 setCurrentPage(1);
             })
@@ -58,7 +67,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
 
     useEffect(() => {
         fetchTweets();
-    }, [selectedFilters, containsRetweets]);
+    }, [selectedFilters, containsRetweets, sortOrder]);
 
     const highlightText = (text, words) => {
         if (!words.length) return text;
@@ -101,6 +110,10 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             setContainsRetweets(false)
         }
     }
+
+    const handleSortOrderChange = (event) => {
+        setSortOrder(event.target.value);
+    };
 
     useEffect(() => {
         if (filterMode === 'contains'){
@@ -203,6 +216,13 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                         <select className="containRetweets" value={retweets} onChange={handleContainRetweetsChange}>
                             <option value="With Retweets">With Retweets</option>
                             <option value="Without Retweets">Without Retweets</option>
+                        </select>
+
+
+                        <select className="sortOrder" value={sortOrder} onChange={handleSortOrderChange}>
+                            <option value="Most Recent">Most Recent</option>
+                            <option value="Least Recent">Least Recent</option>
+                            <option value="Most Likes">Most Liked</option>
                         </select>
                     </div>
                 </div>

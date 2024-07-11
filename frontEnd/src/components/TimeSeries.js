@@ -7,6 +7,7 @@ const TwitterTimeSeries = () => {
     const [data, setData] = useState();
 
     const fetchTweets = () => {
+
         fetch('/get_tweets',
             {
                 'method':'POST',

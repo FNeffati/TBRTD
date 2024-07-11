@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../styling/Twitter.css";
-import ContentHeader from "./ContentHeader";
 import defaultAvatar from '../assets/avatar.jpg';
+import DOMPurify from 'dompurify';
+
 
 function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const [tweets, setTweets] = useState([]);
@@ -155,6 +156,23 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const currentTweets = filteredTweets.slice(indexOfFirstTweet, indexOfLastTweet);
     const totalPages = Math.ceil(filteredTweets.length / tweetsPerPage);
 
+    const linkify = (text) => {
+        const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        return text.replace(urlPattern, (url) => {
+            return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+        });
+    };
+    const sanitizeAndHighlightText = (text, terms) => {
+        let sanitizedText = linkify(text);
+        terms.forEach(term => {
+            if (term) {
+                const regex = new RegExp(`(${term})`, 'gi');
+                sanitizedText = sanitizedText.replace(regex, `<mark>$1</mark>`);
+            }
+        });
+        return DOMPurify.sanitize(sanitizedText);
+    };
+
     return (
         <div className="twitter_container">
             <div className="tweets_info">      
@@ -246,7 +264,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                     <p
                                         className="tweet_text"
                                         dangerouslySetInnerHTML={{
-                                            __html: highlightText(tweet.text, [searchTerm1, searchTerm2]),
+                                            __html: sanitizeAndHighlightText(tweet.text, [searchTerm1, searchTerm2]),
                                         }}
                                     ></p>
                                 </div>

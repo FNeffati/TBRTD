@@ -78,7 +78,7 @@ function App() {
                     <WordCloud cloud_type={selectedFilters.wordCloud} tweets={tweets} onWordCloudClick={handleWordClick} />
                 </div>
                 <div className="Map_container">
-                    <ContentHeader title={"Map / Time Series"} content={"Explore the data with visual representations of tweets over time (Time-Series) and county of origin (Map)."}/>
+                    <ContentHeader title={"Map / Time Series"} content={"Explore the data with visual representations of county of origin (Map) and tweets over time (Time-Series)."}/>
                     <GallerySwitch account_types={selectedFilters.accountType} date={selectedFilters.timeFrame} />
                 </div>
             </div>

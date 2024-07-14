@@ -164,6 +164,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
         });
     };
+    
     const sanitizeAndHighlightText = (text, terms) => {
         let sanitizedText = linkify(text);
         terms.forEach(term => {
@@ -172,7 +173,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                 sanitizedText = sanitizedText.replace(regex, `<mark>$1</mark>`);
             }
         });
-        return DOMPurify.sanitize(sanitizedText);
+        return DOMPurify.sanitize(sanitizedText, { ADD_ATTR: ['target'] });
     };
 
     return (

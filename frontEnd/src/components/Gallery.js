@@ -16,7 +16,7 @@ const GallerySwitch = ({ date, account_types }) => {
                 </div>
                 <div className="Component2">
                     <Component2 className="ts"/>
-                    <ContentHeader title={"Time Series"} content={""}/>
+                    <ContentHeader title={"Time Series"} content={"Click and drag on a section to zoom in closer. Double click to reset view."}/>
                 </div>
             </div>
         </div>

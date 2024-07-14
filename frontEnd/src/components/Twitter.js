@@ -36,7 +36,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     };
 
     const sortTweets = (tweetsToSort) => {
-        return tweetsToSort.sort((a, b) => {
+        return [...tweetsToSort].sort((a, b) => {
             if (sortOrder === "Most Recent" || sortOrder === "Least Recent") {
                 const dateA = new Date(a.time.$date);
                 const dateB = new Date(b.time.$date);
@@ -44,6 +44,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             } else if (sortOrder === "Most Likes") {
                 return (b.likes || 0) - (a.likes || 0);
             }
+            return 1;
         });
     };
 
@@ -58,9 +59,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             })
             .then((response) => response.json())
             .then((data) => {
-                const sortedTweets = sortTweets(data);
-                setTweets(sortedTweets);
-                onTweetsFetched(data);
+                const sortedData = sortTweets(data);  // Sort the data immediately after fetching
+                setTweets(sortedData);
+                onTweetsFetched(sortedData);
                 setCurrentPage(1);
             })
             .catch((error) => console.error(error));
@@ -68,7 +69,11 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
 
     useEffect(() => {
         fetchTweets();
-    }, [selectedFilters, containsRetweets, sortOrder]);
+    }, [selectedFilters, containsRetweets]);
+
+    useEffect(() => {
+        setTweets(prevTweets => sortTweets(prevTweets));
+    }, [sortOrder]);
 
     const highlightText = (text, words) => {
         if (!words.length) return text;
@@ -96,6 +101,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                 return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
             }
         }
+        return true;
     });
 
     const handleFilterChange = (event) => {
@@ -112,10 +118,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         }
     }
 
-    const handleSortOrderChange = (event) => {
-        setSortOrder(event.target.value);
-    };
-
     useEffect(() => {
         if (filterMode === 'contains'){
             if(searchTerm1 === ''){
@@ -131,7 +133,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         }
         console.log(searchTerm1, searchTerm2)
 
-    }, [clickedWord, searchTerm1, searchTerm2]);
+    }, [filterMode, clickedWord, searchTerm1, searchTerm2]);
 
     useEffect(() => {
         setSearchTerm1(searchTerm1);
@@ -157,7 +159,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const totalPages = Math.ceil(filteredTweets.length / tweetsPerPage);
 
     const linkify = (text) => {
-        const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+        const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
         return text.replace(urlPattern, (url) => {
             return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
         });
@@ -237,7 +239,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                         </select>
 
 
-                        <select className="sortOrder" value={sortOrder} onChange={handleSortOrderChange}>
+                        <select className="sortOrder" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
                             <option value="Most Recent">Most Recent</option>
                             <option value="Least Recent">Least Recent</option>
                             <option value="Most Likes">Most Liked</option>

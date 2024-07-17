@@ -3,7 +3,6 @@ import ReactWordcloud from "react-wordcloud";
 import "../styling/WordCloud.css";
 import 'tippy.js/dist/tippy.css';
 import Util from './analysis';
-import ContentHeader from "./ContentHeader";
 
 
 const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
@@ -12,26 +11,35 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
         text: "LOADING",
         value: 20
     }]);
-    const [loading, setLoading] = useState(false);
+    const [loading] = useState(false);
 
 
     useEffect(() => {
         if (tweets.length > 0) {
-            if (cloud_type.length === 0 || cloud_type[0] === 'Non Geo Single Terms') {
-                const top100Words = Util.nonGeoRegularTermWordCloud(tweets);
-                setWords(top100Words);
-            }
-            else if (cloud_type[0] === "Geo Single Terms") {
-                const hashtags = Util.geoRegularTermWordCloud(tweets);
-                setWords(hashtags);
-            }
-            else if (cloud_type[0] === "Geo Hashtags") {
-                const hashtags = Util.geohashtagsCloud(tweets);
-                setWords(hashtags);
-            }
-            else if (cloud_type[0] === "Non-Geo Hashtags") {
-                const hashtags = Util.nonGeohashtagsCloud(tweets);
-                setWords(hashtags);
+            try {
+                if (cloud_type.length === 0 || cloud_type[0] === 'Non Geo Single Terms') {
+                    const top100Words = Util.nonGeoRegularTermWordCloud(tweets);
+                    setWords(top100Words);
+                }
+                else if (cloud_type[0] === "Unique Word Cloud") {
+                    const topWords = Util.singleUserWordCloud(tweets);
+                    setWords(topWords);
+                }
+                else if (cloud_type[0] === "Geo Single Terms") {
+                    const hashtags = Util.geoRegularTermWordCloud(tweets);
+                    setWords(hashtags);
+                }
+                else if (cloud_type[0] === "Geo Hashtags") {
+                    const hashtags = Util.geohashtagsCloud(tweets);
+                    setWords(hashtags);
+                }
+                else if (cloud_type[0] === "Non-Geo Hashtags") {
+                    const hashtags = Util.nonGeohashtagsCloud(tweets);
+                    setWords(hashtags);
+                }
+            } catch (error) {
+                console.error("Error generating word cloud:", error);
+                setWords([{ text: "Error generating cloud", value: 20 }]);
             }
         } else {
             setWords([{
@@ -65,7 +73,7 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
         () => ({
             onWordClick: (word) => onWordCloudClick(word.text)
         }),
-        []
+        [onWordCloudClick]
     );
 
     const size = useMemo(() => [500, 600], []);

@@ -13,7 +13,7 @@ function App() {
     const [tweets, setTweets] = useState([]);
     const Account_Type_Options = ["Academic", "Government", "Media", "Other", "Tourism"];
     const County_Options = ["Pasco", "Pinellas", "Hillsborough", "Manatee", "Sarasota"];
-    const Word_Cloud_Options = ["Geo Hashtags", "Non-Geo Hashtags", 'Geo Single Terms', 'Non Geo Single Terms'];
+    const Word_Cloud_Options = ['Unique Word Cloud', "Geo Hashtags", "Non-Geo Hashtags", 'Geo Single Terms', 'Non Geo Single Terms'];
 
 
     const [selectedFilters, setSelectedFilters] = useState({

@@ -3,7 +3,14 @@ import "../styling/Twitter.css";
 import defaultAvatar from '../assets/avatar.jpg';
 import DOMPurify from 'dompurify';
 
-
+/**
+ * Twitter component fetches and displays tweets based on selected filters and search terms.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {Array<string>} props.selectedFilters - The selected filters to fetch tweets.
+ * @param {Function} props.onTweetsFetched - Callback function to handle fetched tweets.
+ * @param {string} props.clickedWord - The clicked word to be used for filtering tweets.
+ */
 function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const [tweets, setTweets] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -11,9 +18,15 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const [searchTerm2, setSearchTerm2] = useState('');
     const [filterMode, setFilterMode] = useState('exact');
     const [containsRetweets, setContainsRetweets] = useState(true);
-    const [retweets, setRetweets] = useState("With Retweets")
+    const [retweets, setRetweets] = useState("With Retweets");
     const [sortOrder, setSortOrder] = useState("Most Recent");
 
+    /**
+     * Formats the date object to a readable string.
+     *
+     * @param {Object} dateObj - The date object to format.
+     * @returns {string} The formatted date string.
+     */
     const formatDate = (dateObj) => {
         let isoDateString;
         if (typeof dateObj === 'object' && dateObj.hasOwnProperty('$date')) {
@@ -35,6 +48,12 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         });
     };
 
+    /**
+     * Sorts tweets based on the selected sort order.
+     *
+     * @param {Array<Object>} tweetsToSort - The array of tweets to sort.
+     * @returns {Array<Object>} The sorted array of tweets.
+     */
     const sortTweets = (tweetsToSort) => {
         return [...tweetsToSort].sort((a, b) => {
             if (sortOrder === "Most Recent" || sortOrder === "Least Recent") {
@@ -48,15 +67,17 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         });
     };
 
+    /**
+     * Fetches tweets from the server based on selected filters and retweets setting.
+     */
     const fetchTweets = () => {
-        fetch('/get_tweets',
-            {
-                'method': 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify([selectedFilters, {"retweets":containsRetweets}])
-            })
+        fetch('/get_tweets', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify([selectedFilters, { "retweets": containsRetweets }])
+        })
             .then((response) => response.json())
             .then((data) => {
                 const sortedData = sortTweets(data);  // Sort the data immediately after fetching
@@ -75,13 +96,19 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         setTweets(prevTweets => sortTweets(prevTweets));
     }, [sortOrder]);
 
+    /**
+     * Highlights the specified words in the text.
+     *
+     * @param {string} text - The text to highlight.
+     * @param {Array<string>} words - The words to highlight.
+     * @returns {string} The text with highlighted words.
+     */
     const highlightText = (text, words) => {
         if (!words.length) return text;
 
         const regex = new RegExp(words.filter(word => word !== '').join('|'), 'gi');
         return text.replace(regex, (match) => `<span class="highlight">${match}</span>`);
     };
-
 
     const filteredTweets = tweets.filter((tweet) => {
         if (filterMode === 'exact') {
@@ -104,28 +131,47 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         return true;
     });
 
+    /**
+     * Handles the change of filter mode (exact or contains).
+     *
+     * @param {Event} event - The change event.
+     */
     const handleFilterChange = (event) => {
         setFilterMode(event.target.value);
     };
+
+    /**
+     * Handles the change of retweets setting.
+     *
+     * @param {Event} event - The change event.
+     */
     const handleContainRetweetsChange = (event) => {
         if(event.target.value === "With Retweets"){
-            setRetweets('With Retweets')
-            setContainsRetweets(true)
+            setRetweets('With Retweets');
+            setContainsRetweets(true);
         }
         else if(event.target.value === "Without Retweets"){
-            setRetweets('Without Retweets')
-            setContainsRetweets(false)
+            setRetweets('Without Retweets');
+            setContainsRetweets(false);
         }
-    }
+    };
+
+    /**
+     * Handles the change of sort order.
+     *
+     * @param {Event} event - The change event.
+     */
+    const handleSortOrderChange = (event) => {
+        setSortOrder(event.target.value);
+    };
 
     useEffect(() => {
         if (filterMode === 'contains'){
             if(searchTerm1 === ''){
                 setSearchTerm1(clickedWord);
             }
-
             else if(searchTerm2 === ''){
-                setSearchTerm2(clickedWord)
+                setSearchTerm2(clickedWord);
             }
         }
         else if(filterMode === 'exact'){
@@ -135,17 +181,27 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
 
     }, [filterMode, clickedWord, searchTerm1, searchTerm2]);
 
+
     useEffect(() => {
         setSearchTerm1(searchTerm1);
-        setSearchTerm2(searchTerm2)
+        setSearchTerm2(searchTerm2);
     }, [searchTerm1, searchTerm2]);
 
+    /**
+     * Handles the change of the current page.
+     *
+     * @param {Event} event - The change event.
+     */
     const handlePageChange = (event) => {
         const newPage = event.target.value === '' ? '' : Number(event.target.value);
         if (newPage === '' || (newPage >= 1 && newPage <= totalPages)) {
             setCurrentPage(newPage);
         }
     };
+
+    /**
+     * Handles the blur event of the page input to reset to 1 if empty.
+     */
     const handleBlur = () => {
         if (currentPage === '') {
             setCurrentPage(1);
@@ -158,13 +214,27 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const currentTweets = filteredTweets.slice(indexOfFirstTweet, indexOfLastTweet);
     const totalPages = Math.ceil(filteredTweets.length / tweetsPerPage);
 
+    /**
+     * Converts URLs in the text to clickable links.
+     *
+     * @param {string} text - The text to linkify.
+     * @returns {string} The text with clickable links.
+     */
     const linkify = (text) => {
         const urlPattern = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#/%?=~_|!:,.;]*[-A-Z0-9+&@#/%=~_|])/ig;
         return text.replace(urlPattern, (url) => {
             return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
         });
     };
-    
+
+
+    /**
+     * Sanitizes and highlights the specified terms in the text.
+     *
+     * @param {string} text - The text to sanitize and highlight.
+     * @param {Array<string>} terms - The terms to highlight.
+     * @returns {string} The sanitized and highlighted text.
+     */
     const sanitizeAndHighlightText = (text, terms) => {
         let sanitizedText = linkify(text);
         terms.forEach(term => {
@@ -178,8 +248,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
 
     return (
         <div className="twitter_container">
-            <div className="tweets_info">      
-            </div>
+            <div className="tweets_info"></div>
             <div className="tweets_header">
                 <div className="search_bar_container">
                     {filterMode === 'exact' && (
@@ -212,7 +281,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                     Clear
                                 </button>
                             )}
-
                             <input
                                 className="tweet_search_bar"
                                 type="text"
@@ -232,13 +300,10 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             <option value="exact">Exact Match</option>
                             <option value="contains">Contains</option>
                         </select>
-
-
                         <select className="containRetweets" value={retweets} onChange={handleContainRetweetsChange}>
                             <option value="With Retweets">With Retweets</option>
                             <option value="Without Retweets">Without Retweets</option>
                         </select>
-
 
                         <select className="sortOrder" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
                             <option value="Most Recent">Most Recent</option>
@@ -248,7 +313,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                     </div>
                 </div>
             </div>
-
             <div className="tweets_container">
                 <ul>
                     {Array.isArray(currentTweets) && currentTweets.length > 0 ? (
@@ -262,7 +326,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                     />
                                     <a className="username" target="_blank" rel="noopener noreferrer" href={"http://www.x.com/" + tweet.username}>@{tweet.username}</a>
                                 </div>
-
                                 <div className="tweet_mid">
                                     <p
                                         className="tweet_text"
@@ -271,17 +334,14 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                         }}
                                     ></p>
                                 </div>
-
                                 <div className="tweet_bottom">
                                     <p className="tweet_time">{formatDate(tweet.time)}</p>
                                     <p className="tweet_location">{tweet.location}</p>
                                 </div>
-
                                 <hr className="divider"/>
-
-                                <div className=" tweet_interactions">
+                                <div className="tweet_interactions">
                                     <p>Likes: {tweet.likes || 0}</p>
-                                    <p>Retweets: {tweet.retweets | 0}</p>
+                                    <p>Retweets: {tweet.retweets || 0}</p>
                                     <p>Replies: {tweet.replies || 0}</p>
                                 </div>
                             </div>

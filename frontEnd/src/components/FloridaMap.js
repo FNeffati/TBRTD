@@ -4,9 +4,21 @@ import floridaCounties from './geojson-fl-counties-fips.json';
 import "../styling/FloridaMap.css";
 import L from 'leaflet';
 
+
+/**
+ * FloridaMap component renders a map of Florida with counties and tweet counts.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.date - The date for which to fetch tweet counts.
+ * @param {Array<string>} props.account_types - The account types for which to fetch tweet counts.
+ */
 const FloridaMap = ({ date, account_types }) => {
 
     const [tweetCounts, setTweetCounts] = useState(0)
+
+    /**
+     * Fetches tweet counts for the specified date and account types.
+     */
     const fetchCounts = () => {
         fetch('/get_counts',
             {
@@ -29,6 +41,12 @@ const FloridaMap = ({ date, account_types }) => {
         fetchCounts();
     }, [date, account_types]);
 
+    /**
+     * Normalizes tweet counts to a range of 0 to 1 based on the maximum count.
+     *
+     * @param {Object} tweetCounts - The tweet counts by county.
+     * @returns {Object} The normalized tweet counts.
+     */
 
     const normalizeTweetCounts = (tweetCounts) => {
         const maxCount = Math.max(...Object.values(tweetCounts));
@@ -58,7 +76,15 @@ const FloridaMap = ({ date, account_types }) => {
         'purple': [128, 0, 128]
     };
 
+    /**
+     * Determines the fill color for a county based on tweet count intensity.
+     *
+     * @param {string} countyName - The name of the county.
+     * @param {number} normalizedCount - The normalized tweet count for the county.
+     * @returns {string} The RGB color string for the county.
+     */
     const getColor = (countyName, normalizedCount) => {
+        /*
         const color = colorMap[countyName] || 'black';
         const [r, g, b] = rgbMap[color];
 
@@ -69,8 +95,18 @@ const FloridaMap = ({ date, account_types }) => {
 
         return `rgb(${adjustedR}, ${adjustedG}, ${adjustedB})`;
         // return `rgb(${r}, ${g}, ${b})`;
+        */
+
+        const intensity = Math.round(255 * normalizedCount);
+        return `rgb(${255}, ${255 - intensity}, ${255 - intensity})`;
     };
 
+    /**
+     * Defines the style for each county on the map.
+     *
+     * @param {Object} feature - The GeoJSON feature for the county.
+     * @returns {Object} The style object for the county.
+     */
     const style = (feature) => {
         const countyName = feature.properties.NAME;
         const tweetCount = normalizedTweetCounts[countyName] || 0;
@@ -84,6 +120,13 @@ const FloridaMap = ({ date, account_types }) => {
         };
     };
     const [hoverInfo, setHoverInfo] = useState({ show: false, county: '', x: 0, y: 0 });
+
+    /**
+     * Adds mouseover and mouseout event listeners to each county layer.
+     *
+     * @param {Object} county - The GeoJSON feature for the county.
+     * @param {Object} layer - The leaflet layer for the county.
+     */
     const onEachFeature = (county, layer) => {
         layer.on('mouseover', function (e) {
             const mapContainerRect = document.querySelector('.map_div').getBoundingClientRect();
@@ -96,6 +139,7 @@ const FloridaMap = ({ date, account_types }) => {
             setHoverInfo({ show: false, county: '', x: 0, y: 0 });
         });
     };
+
 
     const countyMarkers = floridaCounties.features.map((feature, index) => {
         const countyName = feature.properties.NAME;
@@ -137,6 +181,12 @@ const FloridaMap = ({ date, account_types }) => {
     );
 };
 
+/**
+ * Calculates the centroid of a set of coordinates.
+ *
+ * @param {Array} coordinates - The array of coordinates.
+ * @returns {Array<number>} The centroid of the coordinates.
+ */
 const calculateCentroid = (coordinates) => {
     if (!coordinates || !Array.isArray(coordinates) || coordinates.length === 0) {
         return [0, 0];

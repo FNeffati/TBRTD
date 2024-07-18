@@ -1,4 +1,8 @@
 class Util {
+    /*
+    The Util class contains various static methods to process and analyze text data from tweets, focusing on generating
+    word clouds and filtering words based on specific criteria.
+     */
     static locations = ['Alligator Point', 'Amelia City', 'Amelia Island', 'American Beach', "Anna Maria Island",
         'Anna Maria', "Anne's Beach", 'Atlantic Beach', 'Bahia Honda Key', 'Bal Harbour', 'Ballast Key',
         'Belleair Beach', 'Belleair Shore', 'Bethune Beach', 'Beverly Beach', 'Big Lagoon State Park',
@@ -238,6 +242,11 @@ class Util {
         "youll", "youre", "youve", "shes", "hed", "shed", "hell", "shell", "shant", "mustnt", "whens", "whys", "hows", "httpstcodszn4wwgrn", 'httpstcojcetf0i822'
     ];
 
+    /**
+     * Counts the occurrences of each word in the provided list, sorts them by frequency, and returns the top 200 most frequent words.
+     * @param {Array<string>} wordList - An array of words.
+     * @returns {Array<object>} An array of objects with the properties `text` (the word) and `value` (the frequency), sorted by frequency and limited to the top 200 words.
+     */
     static countWords(wordList) {
         const termCounts = wordList.reduce((counts, token) => {
             counts[token] = (counts[token] || 0) + 1;
@@ -249,11 +258,13 @@ class Util {
         return wordFrequencyArray.slice(0, 200);
     }
 
+    /**
+     * Generates a word cloud of non-geographic terms from the provided tweets.
+     * @param {Array<object>} tweets - An array of tweet objects, each containing a `text` property.
+     * @returns {Array<object>} An array of word-frequency objects, excluding geographic terms and stop words.
+     */
     static nonGeoRegularTermWordCloud(tweets) {
         const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
-
-        // Defining patterns
-        //"RT @username:" & "@username"
         const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
         const usernamePattern = /@[A-Za-z0-9._-]+/g;
         let replacedText = flattenedText.replace(RTPattern, '').replace(usernamePattern, '').trim();
@@ -270,18 +281,15 @@ class Util {
         // const geoTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
         // const politTermsPattern = /\b(democrat|democratic|republican|gop|demcastfl|vote blue|vote red|red wave|blue wave|right wing|left wing|far right|far left|extreme right|extreme left|supremacy|supremacist|supremacys|supremacists|terrorist|terrorism|terrorists|ron desantis|desantis|remove ron|deathsantis|rick scott|red tide rick|marco rubio|rubio|bill nelson|donald trump|trump|mike pence|pence|joe biden|biden|kamala harris|crist|charlie christ|andrew gillum|gillum|kriseman|richard kriseman|ken welch|george cretekos|cretekos|buckhorn|bob buckhorn|jane castor|castor|john holic|holic|ron feinsod)\b/gi;
         // const redTideTermsPattern = /\b(red tide|red tides|karenia brevis|red algae|redtide|redtide's|kbrevis|karenia|brevis|kareniabrevis|redalgae)\b/gi;
-        //
-        // const placeholder = '';
-        // const replacedText = flattenedText.replace(geoTermsPattern, placeholder)
-        //     .replace(politTermsPattern, placeholder)
-        //     .replace(redTideTermsPattern, placeholder)
-        //     .replace(RTPattern, placeholder);
 
-        // const lemmatizer = require('wink-lemmatizer')
-        // const filteredWords = replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase()));
         return Util.countWords(filteredWords);
     }
 
+    /**
+     * Generates a word cloud of geographic terms from the provided tweets.
+     * @param {Array<object>} tweets - An array of tweet objects, each containing a `text` property.
+     * @returns {Array<object>} An array of word-frequency objects, including only geographic terms.
+     */
     static geoRegularTermWordCloud(tweets) {
         const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
 
@@ -302,6 +310,11 @@ class Util {
         return Util.countWords(filteredWords);
     }
 
+    /**
+     * Generates a word cloud of geographic hashtags from the provided tweets.
+     * @param {Array<object>} tweets - An array of tweet objects, each containing a `text` property.
+     * @returns {Array<object>} An array of hashtag-frequency objects, including only geographic hashtags.
+     */
     static geohashtagsCloud(tweets) {
         const punctuationPattern = /[^\w\s#]|_/g;
         const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase().replace(punctuationPattern, ' ');
@@ -321,6 +334,11 @@ class Util {
             .map(word => word.substring(1)));
     }
 
+    /**
+     * Generates a word cloud of non-geographic hashtags from the provided tweets.
+     * @param {Array<object>} tweets - An array of tweet objects, each containing a `text` property.
+     * @returns {Array<object>} An array of hashtag-frequency objects, excluding geographic hashtags and stop words.
+     */
     static nonGeohashtagsCloud(tweets) {
         const punctuationPattern = /[^\w\s#]|_/g;
         const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase().replace(punctuationPattern, ' ');
@@ -340,8 +358,5 @@ class Util {
             .map(word => word.substring(1)));
     }
 
-    // Other methods...
 }
-
-// Export the Util class
 module.exports = Util;

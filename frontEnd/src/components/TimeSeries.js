@@ -2,12 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import Dygraph from 'dygraphs';
 import "../styling/TimeSeries.css"
 
+
+/**
+ * TwitterTimeSeries component renders a time series graph of tweet counts per county using Dygraph.
+ */
 const TwitterTimeSeries = () => {
     const graphRef = useRef(null);
     const [data, setData] = useState();
 
     const fetchTweets = () => {
 
+        /**
+         * Fetches all the tweet data from the server with no filtering.
+         */
         fetch('/get_tweets',
             {
                 'method':'POST',
@@ -23,12 +30,14 @@ const TwitterTimeSeries = () => {
             .catch((error) => console.error(error));
     };
 
+    // Fetch tweets data when the component mounts or data changes
     useEffect(() =>{
         if (!data){
             fetchTweets();
         }
     }, [data]);
 
+    // Update the graph when data is available
     useEffect(() => {
         if (graphRef.current && data) {
 
@@ -39,7 +48,7 @@ const TwitterTimeSeries = () => {
                 locationArrays[county] = [];
             });
 
-
+            // Process tweet data to count tweets per county per date
             data.forEach((tweet) => {
                 const date = new Date(tweet.time.$date);
                 const dateString = date.toISOString().split('T')[0]; // Extract YYYY-MM-DD
@@ -65,9 +74,10 @@ const TwitterTimeSeries = () => {
                     dyData.push([date].concat(counties.map((county) => (county === location ? count : 0))));
                 });
             });
-
-
             dyData.sort((a, b) => a[0] - b[0]);
+
+
+            // Initialize Dygraph with processed data
             new Dygraph(
                 graphRef.current,
                 dyData,

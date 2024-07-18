@@ -51,9 +51,31 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick }) => {
         transitionDuration: 1000,
     }), []);
 
-    const callbacks = useMemo(() => ({
-        onWordClick: (word) => onWordCloudClick(word.text)
-    }), [onWordCloudClick]);
+    const options = useMemo(
+        () => ({
+            rotations: 1,
+            rotationAngles: [0],
+            fontSizes: [15, 60],
+            colors: ["#61baff"],
+            enableTooltip: true,
+            deterministic: true,
+            fontFamily: "impact",
+            fontStyle: "normal",
+            fontWeight: "normal",
+            padding: 1,
+            scale: "sqrt",
+            spiral: "archimedean",
+            transitionDuration: 1000,
+        }),
+        []
+    );
+
+    const callbacks = useMemo(
+        () => ({
+            onWordClick: (word) => onWordCloudClick(word.text)
+        }),
+        []
+    );
 
     const size = useMemo(() => [500, 600], []);
 

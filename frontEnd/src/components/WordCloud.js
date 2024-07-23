@@ -35,22 +35,6 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick }) => {
         }
     }, [tweets, cloud_type]);
 
-    const options = useMemo(() => ({
-        rotations: 1,
-        rotationAngles: [0],
-        fontSizes: [15, 60],
-        colors: ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"],
-        enableTooltip: true,
-        deterministic: true,
-        fontFamily: "impact",
-        fontStyle: "normal",
-        fontWeight: "normal",
-        padding: 1,
-        scale: "sqrt",
-        spiral: "archimedean",
-        transitionDuration: 1000,
-    }), []);
-
     const options = useMemo(
         () => ({
             rotations: 1,

@@ -62,6 +62,10 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                 return sortOrder === "Most Recent" ? dateB - dateA : dateA - dateB;
             } else if (sortOrder === "Most Likes") {
                 return (b.likes || 0) - (a.likes || 0);
+            } else if (sortOrder === "Most Retweets") {
+                return (b.retweets || 0) - (a.retweets || 0);
+            } else if (sortOrder === "Most Replies") {
+                return (b.replies || 0) - (a.replies || 0);
             }
             return 1;
         });
@@ -309,6 +313,8 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             <option value="Most Recent">Most Recent</option>
                             <option value="Least Recent">Least Recent</option>
                             <option value="Most Likes">Most Liked</option>
+                            <option value="Most Retweets">Most Retweets</option>
+                            <option value="Most Replies">Most Replies</option>
                         </select>
                     </div>
                 </div>

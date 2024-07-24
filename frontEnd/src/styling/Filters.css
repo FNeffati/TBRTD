@@ -21,7 +21,7 @@
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     position: absolute;
     width: 220px;
-    z-index: 10000;
+    z-index: 1000;
     left: 0;
 }
 

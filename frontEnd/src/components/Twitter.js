@@ -113,7 +113,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const filteredTweets = tweets.filter((tweet) => {
         if (filterMode === 'exact') {
             return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
-        } else {
+        } else if (filterMode === 'contains') {
             if (searchTerm1 !== '' || searchTerm2 !== '') {
                 if (searchTerm1 !== '' && searchTerm2 !== ''){
                     return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) || tweet.text.toLowerCase().includes(searchTerm2.toLowerCase()));
@@ -127,12 +127,14 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             } else {
                 return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
             }
+        } else if (filterMode === 'contains both') {
+            return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) && tweet.text.toLowerCase().includes(searchTerm2.toLowerCase());
         }
         return true;
     });
 
     /**
-     * Handles the change of filter mode (exact or contains).
+     * Handles the change of filter mode (exact, contains, contains both).
      *
      * @param {Event} event - The change event.
      */
@@ -295,10 +297,39 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             )}
                         </div>
                     )}
+                    {filterMode === 'contains both' && (
+                        <div>
+                            <input
+                                className="tweet_search_bar"
+                                type="text"
+                                placeholder="First word"
+                                value={searchTerm1}
+                                onChange={(e) => setSearchTerm1(e.target.value)}
+                            />
+                            {searchTerm1 && (
+                                <button className="clear_button" onClick={() => setSearchTerm1('')}>
+                                    Clear
+                                </button>
+                            )}
+                            <input
+                                className="tweet_search_bar"
+                                type="text"
+                                placeholder="Second word"
+                                value={searchTerm2}
+                                onChange={(e) => setSearchTerm2(e.target.value)}
+                            />
+                            {searchTerm2 && (
+                                <button className="clear_button" onClick={() => setSearchTerm2('')}>
+                                    Clear
+                                </button>
+                            )}
+                        </div>
+                    )}
                     <div className="dropdown_menu">
                         <select className="filter_dropdown" value={filterMode} onChange={handleFilterChange}>
                             <option value="exact">Exact Match</option>
-                            <option value="contains">Contains</option>
+                            <option value="contains">Contains Either</option>
+                            <option value="contains both">Contains Both</option>
                         </select>
                         <select className="containRetweets" value={retweets} onChange={handleContainRetweetsChange}>
                             <option value="With Retweets">With Retweets</option>

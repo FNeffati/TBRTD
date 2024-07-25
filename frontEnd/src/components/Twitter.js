@@ -16,7 +16,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm1, setSearchTerm1] = useState('');
     const [searchTerm2, setSearchTerm2] = useState('');
-    const [filterMode, setFilterMode] = useState('exact');
+    const [filterMode, setFilterMode] = useState('Exactly');
     const [containsRetweets, setContainsRetweets] = useState(true);
     const [retweets, setRetweets] = useState("With Retweets");
     const [sortOrder, setSortOrder] = useState("Most Recent");
@@ -41,6 +41,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             return "Invalid Date";
         }
 
+        date.setDate(date.getDate() + 1);
         return date.toLocaleDateString("en-US", {
             year: 'numeric',
             month: 'long',
@@ -62,6 +63,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                 return sortOrder === "Most Recent" ? dateB - dateA : dateA - dateB;
             } else if (sortOrder === "Most Likes") {
                 return (b.likes || 0) - (a.likes || 0);
+            }
+            else if (sortOrder === "Most Retweeted") {
+                return (b.retweets || 0) - (a.retweets || 0);
             }
             return 1;
         });
@@ -111,12 +115,30 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     };
 
     const filteredTweets = tweets.filter((tweet) => {
-        if (filterMode === 'exact') {
+        if (filterMode === 'Exactly') {
+            if (tweet.text === "@Mareenka347 I remember when Sarasota had the red tide for 10 months. Oh man it was tough even just breathing the air outside it was so incredibly strong. So far so good. Haven’t had a red tide like that in a long time since."){
+                console.log(tweet.time)
+                console.log(formatDate(tweet.time))
+            }
             return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
-        } else {
+        } else if (filterMode === 'OR') {
             if (searchTerm1 !== '' || searchTerm2 !== '') {
                 if (searchTerm1 !== '' && searchTerm2 !== ''){
                     return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) || tweet.text.toLowerCase().includes(searchTerm2.toLowerCase()));
+                }
+                if (searchTerm1 !== ''){
+                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()));
+                }
+                if (searchTerm2 !== ''){
+                    return tweet.text.toLowerCase().includes(searchTerm2.toLowerCase());
+                }
+            } else {
+                return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
+            }
+        } else if (filterMode === 'AND'){
+            if (searchTerm1 !== '' || searchTerm2 !== '') {
+                if (searchTerm1 !== '' && searchTerm2 !== ''){
+                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) && tweet.text.toLowerCase().includes(searchTerm2.toLowerCase()));
                 }
                 if (searchTerm1 !== ''){
                     return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()));
@@ -155,18 +177,8 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             setContainsRetweets(false);
         }
     };
-
-    /**
-     * Handles the change of sort order.
-     *
-     * @param {Event} event - The change event.
-     */
-    const handleSortOrderChange = (event) => {
-        setSortOrder(event.target.value);
-    };
-
     useEffect(() => {
-        if (filterMode === 'contains'){
+        if ((filterMode === 'AND') || (filterMode ==='OR')){
             if(searchTerm1 === ''){
                 setSearchTerm1(clickedWord);
             }
@@ -174,7 +186,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                 setSearchTerm2(clickedWord);
             }
         }
-        else if(filterMode === 'exact'){
+        else if(filterMode === 'Exactly'){
             setSearchTerm1(clickedWord);
         }
         console.log(searchTerm1, searchTerm2)
@@ -251,7 +263,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             <div className="tweets_info"></div>
             <div className="tweets_header">
                 <div className="search_bar_container">
-                    {filterMode === 'exact' && (
+                    {filterMode === 'Exactly' && (
                         <div>
                             <input
                                 className="tweet_search_bar"
@@ -267,7 +279,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             )}
                         </div>
                     )}
-                    {filterMode === 'contains' && (
+                    {(filterMode === 'OR') || (filterMode === 'AND') && (
                         <div>
                             <input
                                 className="tweet_search_bar"
@@ -297,8 +309,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                     )}
                     <div className="dropdown_menu">
                         <select className="filter_dropdown" value={filterMode} onChange={handleFilterChange}>
-                            <option value="exact">Exact Match</option>
-                            <option value="contains">Contains</option>
+                            <option value="Exactly">Exactly</option>
+                            <option value="OR">OR</option>
+                            <option value="AND">AND</option>
                         </select>
                         <select className="containRetweets" value={retweets} onChange={handleContainRetweetsChange}>
                             <option value="With Retweets">With Retweets</option>
@@ -309,6 +322,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             <option value="Most Recent">Most Recent</option>
                             <option value="Least Recent">Least Recent</option>
                             <option value="Most Likes">Most Liked</option>
+                            <option value="Most Retweeted">Most Liked</option>
                         </select>
                     </div>
                 </div>

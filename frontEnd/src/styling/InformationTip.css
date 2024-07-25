@@ -13,7 +13,7 @@
     border-radius: 6px;
     padding: 10px; /* Increase padding for better readability */
     position: absolute;
-    z-index: 1000;
+    z-index: 10000;
     top: 125%; /* Change to top */
     left: 50%;
     transform: translateX(-50%); /* Center horizontally */
@@ -35,7 +35,7 @@
 .tooltip:hover .tooltip-text {
     visibility: visible;
     opacity: 1;
-    z-index: 10000;
+    z-index: 100000;
 }
 .tooltip-text {
     width: 250px;

@@ -40,7 +40,7 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick }) => {
             rotations: 1,
             rotationAngles: [0],
             fontSizes: [15, 60],
-            colors: ["#61baff"],
+            colors: ["#163b54"],
             enableTooltip: true,
             deterministic: true,
             fontFamily: "impact",

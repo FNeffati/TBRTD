@@ -29,6 +29,32 @@ html,body{
   justify-content: space-between;
 }
 
+.filter-dropdown-toggle {
+  display: none;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+.filter-dropdown {
+  display: none;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.filter-dropdown.open {
+  display: block;
+}
+
 .Twitter_container, .Word_Cloud_container, .Map_container {
   width: 32%;
   height: 800px;
@@ -51,11 +77,28 @@ html,body{
 }
 
 /* Smaller size, components become single vertical column */
-@media (max-width: 1100px) {
+@media (max-width: 1390px) {
   .Filters_Bar {
     flex-direction: column;
-    margin-left: 40%;
+    margin-left: 5%;
+    margin-right: 5%;
     align-items: stretch;
+  }
+
+  .filter-dropdown-toggle {
+    display: block;
+  }
+
+  .Filters_Bar > *:not(.filter-dropdown-toggle):not(.filter-dropdown) {
+    display: none;
+  }
+
+  .filter-dropdown {
+    display: none;
+  }
+
+  .dropdown-container {
+    margin-left: 15%;
   }
 
   .Body {
@@ -64,7 +107,7 @@ html,body{
   }
 
   .twitter_container {
-    margin-left: 20%;
+    margin-left: 10%;
   }
 
   .Twitter_container, .Word_Cloud_container, .Map_container {
@@ -79,10 +122,6 @@ html,body{
   .Filters_Bar {
     margin-left: 10%;
     margin-top: 80px;
-  }
-
-  .dropdown-container {
-    margin-left: 15%;
   }
 
   .search_bar_container {

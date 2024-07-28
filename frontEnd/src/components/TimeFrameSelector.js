@@ -1,9 +1,14 @@
-import React, {useState} from 'react';
-import '../styling/TimeFrameSelector.css'
+import React, { useState } from 'react';
+import '../styling/TimeFrameSelector.css';
 import InformationTip from "./InformationTip";
-import {preventDefault} from "leaflet/src/dom/DomEvent";
+import { preventDefault } from "leaflet/src/dom/DomEvent";
 
-
+/**
+ * TimeFrameSelector component for selecting a date range.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {Function} props.onTimeFrameChange - Callback function to handle changes in the selected time frame.
+ */
 function TimeFrameSelector({ onTimeFrameChange }) {
 
     const today = new Date();
@@ -17,15 +22,23 @@ function TimeFrameSelector({ onTimeFrameChange }) {
 
     const todayFormatted = `${year}-${month}-${day}`;
 
-
+    // State for start and end dates
     const [startDate, setStartDate] = useState('2018-06-30');
-    const [endDate, setEndDate] = useState(todayFormatted)
+    const [endDate, setEndDate] = useState(todayFormatted);
 
+    /**
+     * Handles the change of the start date input.
+     * @param {Event} e - The change event.
+     */
     const handleStartDateChange = (e) => {
         setStartDate(e.target.value);
         onTimeFrameChange(e.target.value, endDate);
     };
 
+    /**
+     * Handles the change of the end date input.
+     * @param {Event} e - The change event.
+     */
     const handleEndDateChange = (e) => {
         setEndDate(e.target.value);
         onTimeFrameChange(startDate, e.target.value);
@@ -33,13 +46,13 @@ function TimeFrameSelector({ onTimeFrameChange }) {
 
     return (
         <div>
-            <InformationTip information={"<ul> <li><strong>Default:</strong> From 2018 to Present Day</li>  <li><strong>Functionality:</strong> specify a time frame to see tweets from.</li> </ul>"}/>
+            <InformationTip information={"<ul> <li><strong>Default:</strong> From 2018 to Present Day</li>  <li><strong>Functionality:</strong> specify a time frame to see tweets from.</li> </ul>"} />
             <div className="time-frame-selector clearfix">
                 <label>
-                    <input type="date" value={startDate} onChange={handleStartDateChange} onKeyDown={(e)=>(preventDefault(e))} />
+                    <input type="date" value={startDate} onChange={handleStartDateChange} onKeyDown={(e) => (preventDefault(e))} />
                 </label>
                 <label>
-                    <input type="date" value={endDate} onChange={handleEndDateChange} onKeyDown={(e)=>(preventDefault(e))}/>
+                    <input type="date" value={endDate} onChange={handleEndDateChange} onKeyDown={(e) => (preventDefault(e))} />
                 </label>
             </div>
         </div>

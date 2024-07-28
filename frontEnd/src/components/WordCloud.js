@@ -1,18 +1,19 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ReactWordcloud from "react-wordcloud";
 import "../styling/WordCloud.css";
 import 'tippy.js/dist/tippy.css';
 import Util from './analysis';
 
-
-const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
-
-    const [words, setWords] = useState([{
-        text: "LOADING",
-        value: 20
-    }]);
-    const [loading] = useState(false);
-
+/**
+ * WordCloud component renders a word cloud based on the provided tweets and cloud type.
+ *
+ * @param {Object} props - The properties passed to the component.
+ * @param {string} props.cloud_type - The type of word cloud to display.
+ * @param {Array<Object>} props.tweets - The tweets data to generate the word cloud from.
+ * @param {Function} props.onWordCloudClick - Callback function to handle word clicks in the word cloud.
+ */
+const WordCloud = ({ cloud_type, tweets, onWordCloudClick }) => {
+    const [words, setWords] = useState([{ text: "LOADING", value: 20 }]);
 
     useEffect(() => {
         if (tweets.length > 0) {
@@ -42,20 +43,16 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
                 setWords([{ text: "Error generating cloud", value: 20 }]);
             }
         } else {
-            setWords([{
-                text: "LOADING",
-                value: 20
-            }]);
+            setWords([{ text: "LOADING", value: 20 }]);
         }
     }, [tweets, cloud_type]);
-
 
     const options = useMemo(
         () => ({
             rotations: 1,
             rotationAngles: [0],
             fontSizes: [15, 60],
-            colors: ["#61baff"],
+            colors: ["#163b54"],
             enableTooltip: true,
             deterministic: true,
             fontFamily: "impact",
@@ -80,11 +77,9 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick}) => {
 
     return (
         <div className="word-cloud-container">
-            <div className="loading">{loading && <p>Loading...</p>}</div>
-            <div className="word-cloud-info">
-            </div>
+            <div className="word-cloud-info"></div>
             <div className="word-cloud">
-                <ReactWordcloud  words={words} options={options} size={size} padding={0} callbacks={callbacks}/>
+                <ReactWordcloud words={words} options={options} size={size} padding={0} callbacks={callbacks} />
             </div>
         </div>
     );

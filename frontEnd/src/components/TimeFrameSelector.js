@@ -26,6 +26,11 @@ function TimeFrameSelector({ onTimeFrameChange }) {
     const [startDate, setStartDate] = useState('2018-06-30');
     const [endDate, setEndDate] = useState(todayFormatted);
 
+    // Minimum date for start and end dates
+    // This controls how far forward and back you can scroll 
+    const minDate = '2018-06-30';
+    const maxDate = todayFormatted;
+
     /**
      * Handles the change of the start date input.
      * @param {Event} e - The change event.
@@ -49,10 +54,25 @@ function TimeFrameSelector({ onTimeFrameChange }) {
             <InformationTip information={"<ul> <li><strong>Default:</strong> From 2018 to Present Day</li>  <li><strong>Functionality:</strong> specify a time frame to see tweets from.</li> </ul>"} />
             <div className="time-frame-selector clearfix">
                 <label>
-                    <input type="date" value={startDate} onChange={handleStartDateChange} onKeyDown={(e) => (preventDefault(e))} />
+                    <input
+                        type="date"
+                        value={startDate}
+                        onChange={handleStartDateChange}
+                        onKeyDown={(e) => (preventDefault(e))}
+                        // min and max date fields are used to limit the date range here
+                        min={minDate}
+                        max={endDate}
+                    />
                 </label>
                 <label>
-                    <input type="date" value={endDate} onChange={handleEndDateChange} onKeyDown={(e) => (preventDefault(e))} />
+                    <input
+                        type="date"
+                        value={endDate}
+                        onChange={handleEndDateChange}
+                        onKeyDown={(e) => (preventDefault(e))}
+                        min={startDate}
+                        max={maxDate}
+                    />
                 </label>
             </div>
         </div>

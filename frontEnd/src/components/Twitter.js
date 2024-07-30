@@ -279,7 +279,35 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             )}
                         </div>
                     )}
-                    {(filterMode === 'OR') || (filterMode === 'AND') && (
+                    {filterMode === 'OR'  && (
+                        <div>
+                            <input
+                                className="tweet_search_bar"
+                                type="text"
+                                placeholder="First word"
+                                value={searchTerm1}
+                                onChange={(e) => setSearchTerm1(e.target.value)}
+                            />
+                            {searchTerm1 && (
+                                <button className="clear_button" onClick={() => setSearchTerm1('')}>
+                                    Clear
+                                </button>
+                            )}
+                            <input
+                                className="tweet_search_bar"
+                                type="text"
+                                placeholder="Second word"
+                                value={searchTerm2}
+                                onChange={(e) => setSearchTerm2(e.target.value)}
+                            />
+                            {searchTerm2 && (
+                                <button className="clear_button" onClick={() => setSearchTerm2('')}>
+                                    Clear
+                                </button>
+                            )}
+                        </div>
+                    )}
+                    {filterMode === 'AND'  && (
                         <div>
                             <input
                                 className="tweet_search_bar"
@@ -322,7 +350,8 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             <option value="Most Recent">Most Recent</option>
                             <option value="Least Recent">Least Recent</option>
                             <option value="Most Likes">Most Liked</option>
-                            <option value="Most Retweeted">Most Liked</option>
+                            <option value="Most Retweeted">Most Retweeted</option>
+                            <option value="Most Replies">Most Replies</option>
                         </select>
                     </div>
                 </div>

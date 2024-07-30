@@ -4,6 +4,10 @@ import "../styling/WordCloud.css";
 import 'tippy.js/dist/tippy.css';
 import Util from './analysis';
 
+/*
+React Word Cloud Package: https://www.npmjs.com/package/react-wordcloud
+ */
+
 /**
  * WordCloud component renders a word cloud based on the provided tweets and cloud type.
  *

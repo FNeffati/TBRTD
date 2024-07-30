@@ -141,18 +141,18 @@ function MainApp() {
 
 function App() {
     return (
-        <div>
-            <nav>
-                <ul>
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/faq">How to use this Dashboard</Link></li>
-                </ul>
-            </nav>
-            <Routes>
-                <Route path="/" element={<MainApp />} />
-                <Route path="/faq" element={<FAQ />} />
-            </Routes>
-        </div>
+    <div>
+        <nav>
+            <ul>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/faq">How to use this Dashboard</Link></li>
+            </ul>
+        </nav>
+        <Routes>
+            <Route path="/" element={<MainApp />} />
+            <Route path="/faq" element={<FAQ />} />
+        </Routes>
+    </div>
     );
 }
 

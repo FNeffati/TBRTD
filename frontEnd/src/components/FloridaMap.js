@@ -4,6 +4,12 @@ import floridaCounties from './geojson-fl-counties-fips.json';
 import "../styling/FloridaMap.css";
 import L from 'leaflet';
 
+/*
+Citations:
+GeoJSON source: https://github.com/danielcs88/fl_geo_json
+Leaflet: https://react-leaflet.js.org
+*/
+
 
 /**
  * FloridaMap component renders a map of Florida with counties and tweet counts.

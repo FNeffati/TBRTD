@@ -4,6 +4,7 @@ import "../styling/TimeSeries.css";
 
 /**
  * TwitterTimeSeries component renders a time series graph of tweet counts per county using Dygraphs.
+ * Dygraphs package link: https://www.npmjs.com/package/dygraphs
  */
 const TwitterTimeSeries = () => {
     const graphRef = useRef(null);

@@ -27,7 +27,8 @@ function TimeFrameSelector({ onTimeFrameChange }) {
     const [endDate, setEndDate] = useState(todayFormatted);
 
     // Minimum date for start and end dates
-    const minDate = '2018-06-30'; // adjust as needed
+    // This controls how far forward and back you can scroll 
+    const minDate = '2018-06-30';
     const maxDate = todayFormatted;
 
     /**
@@ -58,6 +59,7 @@ function TimeFrameSelector({ onTimeFrameChange }) {
                         value={startDate}
                         onChange={handleStartDateChange}
                         onKeyDown={(e) => (preventDefault(e))}
+                        // min and max date fields are used to limit the date range here
                         min={minDate}
                         max={endDate}
                     />

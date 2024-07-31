@@ -14,6 +14,18 @@ analysis = Analysis.Analysis()
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def serve(path):
+    """
+    Serve the React application.
+
+    If a specific path is requested and it exists in the static folder, serve that file.
+    Otherwise, serve the index.html file to enable client-side routing.
+
+    Args:
+        path (str): The requested path.
+
+    Returns:
+        Response: The file from the static folder or the index.html file.
+    """
     if path != "" and os.path.exists(app.static_folder + '/' + path):
         return send_from_directory(app.static_folder, path)
     else:
@@ -22,6 +34,24 @@ def serve(path):
 
 @app.route('/get_tweets', methods=['POST'])
 def get_tweets():
+    """
+    Get filtered tweets based on the request parameters.
+
+    The request body should contain JSON data with the following structure:
+    [
+        {
+            "timeFrame": "start_date end_date",
+            "county": ["list_of_counties"],
+            "accountType": ["list_of_account_types"]
+        },
+        {
+            "retweets": true_or_false
+        }
+    ]
+
+    Returns:
+        Response: JSON object containing the filtered tweets.
+    """
     request_body = request.get_json()
     retweets = True
     time_frame = None
@@ -42,6 +72,18 @@ def get_tweets():
 
 @app.route('/get_counts', methods=['POST'])
 def get_counts():
+    """
+    Get the count of tweets per county based on the request parameters.
+
+    The request body should contain JSON data with the following structure:
+    [
+        "start_date end_date",
+        ["list_of_account_types"]
+    ]
+
+    Returns:
+        Response: JSON object containing the count of tweets per county.
+    """
     request_body = request.get_json()
 
     time_frame = None

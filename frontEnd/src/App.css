@@ -109,7 +109,7 @@ nav ul li a:hover {
 }
 
 /* Smaller size, components become single vertical column */
-@media (max-width: 1390px) {
+@media (max-width: 1400px) {
   .Filters_Bar {
     flex-direction: column;
     margin-left: 5%;

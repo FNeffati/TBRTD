@@ -907,12 +907,10 @@ class Util {
             })
             .map(word => word.substring(1)));
     }
-    static singleUserWordCloud(tweets) {
-        // Create a Map to store words and the set of users who used them
+    static geoSingleUserWordCloud(tweets) {
         const wordUsers = new Map();
     
         tweets.forEach(tweet => {
-            // Use author_id as the primary identifier, fall back to id if author_id is not available
             let userId = tweet.author_id || tweet.id;
             if (!userId) {
                 console.warn('Could not find user ID for tweet:', tweet);
@@ -921,7 +919,7 @@ class Util {
     
             let text = tweet.text || '';
     
-            // Remove RT patterns, usernames, and punctuation
+            // Remove RT patterns, usernames, punctuation, and URLs
             const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
             const usernamePattern = /@[A-Za-z0-9._-]+/g;
             const punctuationPattern = /[^\w\s]|_/g;
@@ -933,11 +931,63 @@ class Util {
                         .toLowerCase()
                         .trim();
     
-            // Split into words and filter out stop words
+            // Split into words and filter for location words only
             const { removeStopwords } = require('stopword');
-            const words = removeStopwords(text.split(/\s+/).filter(word => !Util.stopWords.includes(word)));
+            const words = removeStopwords(text.split(/\s+/).filter(word => 
+                !Util.stopWords.includes(word) && Util.locations.includes(word)
+            ));
     
-            // Update the wordUsers map
+            // Only process if there are location words (indicating a geo-related tweet)
+            if (words.length > 0) {
+                words.forEach(word => {
+                    if (!wordUsers.has(word)) {
+                        wordUsers.set(word, new Set());
+                    }
+                    wordUsers.get(word).add(userId);
+                });
+            }
+        });
+    
+        const wordFrequencyArray = Array.from(wordUsers.entries()).map(([word, users]) => ({
+            text: word,
+            value: users.size
+        }));
+    
+        wordFrequencyArray.sort((a, b) => b.value - a.value);
+        return wordFrequencyArray.slice(0, 100);
+    }
+
+    static nonGeoSingleUserWordCloud(tweets) {
+        const wordUsers = new Map();
+    
+        tweets.forEach(tweet => {
+            let userId = tweet.author_id || tweet.id;
+            if (!userId) {
+                console.warn('Could not find user ID for tweet:', tweet);
+                return; // Skip this tweet
+            }
+    
+            let text = tweet.text || '';
+    
+            // Remove RT patterns, usernames, punctuation, and URLs
+            const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
+            const usernamePattern = /@[A-Za-z0-9._-]+/g;
+            const punctuationPattern = /[^\w\s]|_/g;
+            const urlPattern = /https?:\/\/\S+/gi;
+            text = text.replace(RTPattern, '')
+                        .replace(usernamePattern, '')
+                        .replace(punctuationPattern, '')
+                        .replace(urlPattern, '')
+                        .toLowerCase()
+                        .trim();
+    
+            // Split into words and filter out stop words and location words
+            const { removeStopwords } = require('stopword');
+            const words = removeStopwords(text.split(/\s+/).filter(word => 
+                !Util.stopWords.includes(word) && !Util.locations.includes(word)
+            ));
+    
+            // Process all non-location words
             words.forEach(word => {
                 if (!wordUsers.has(word)) {
                     wordUsers.set(word, new Set());
@@ -946,13 +996,11 @@ class Util {
             });
         });
     
-        // Convert the map to an array of objects with word and user count
         const wordFrequencyArray = Array.from(wordUsers.entries()).map(([word, users]) => ({
             text: word,
             value: users.size
         }));
     
-        // Sort by user count and take top 100
         wordFrequencyArray.sort((a, b) => b.value - a.value);
         return wordFrequencyArray.slice(0, 100);
     }

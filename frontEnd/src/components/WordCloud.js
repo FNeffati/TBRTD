@@ -26,10 +26,6 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick }) => {
                     const top100Words = Util.nonGeoRegularTermWordCloud(tweets);
                     setWords(top100Words);
                 }
-                else if (cloud_type[0] === "Unique Word Cloud") {
-                    const topWords = Util.singleUserWordCloud(tweets);
-                    setWords(topWords);
-                }
                 else if (cloud_type[0] === "Geo Single Terms") {
                     const hashtags = Util.geoRegularTermWordCloud(tweets);
                     setWords(hashtags);
@@ -41,6 +37,14 @@ const WordCloud = ({ cloud_type, tweets, onWordCloudClick }) => {
                 else if (cloud_type[0] === "Non-Geo Hashtags") {
                     const hashtags = Util.nonGeohashtagsCloud(tweets);
                     setWords(hashtags);
+                }
+                else if (cloud_type[0] === "Geo Single User") {
+                    const topWords = Util.geoSingleUserWordCloud(tweets);
+                    setWords(topWords);
+                }
+                else if (cloud_type[0] === "Non-Geo Single User") {
+                    const topWords = Util.nonGeoSingleUserWordCloud(tweets);
+                    setWords(topWords);
                 }
             } catch (error) {
                 console.error("Error generating word cloud:", error);

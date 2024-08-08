@@ -116,10 +116,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
 
     const filteredTweets = tweets.filter((tweet) => {
         if (filterMode === 'Exactly') {
-            if (tweet.text === "@Mareenka347 I remember when Sarasota had the red tide for 10 months. Oh man it was tough even just breathing the air outside it was so incredibly strong. So far so good. Haven’t had a red tide like that in a long time since."){
-                console.log(tweet.time)
-                console.log(formatDate(tweet.time))
-            }
             return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
         } else if (filterMode === 'OR') {
             if (searchTerm1 !== '' || searchTerm2 !== '') {
@@ -189,8 +185,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         else if(filterMode === 'Exactly'){
             setSearchTerm1(clickedWord);
         }
-        console.log(searchTerm1, searchTerm2)
-
     }, [filterMode, clickedWord, searchTerm1, searchTerm2]);
 
 

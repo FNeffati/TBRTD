@@ -9,6 +9,8 @@ import "../styling/TimeSeries.css";
 const TwitterTimeSeries = () => {
     const graphRef = useRef(null);
     const [data, setData] = useState();
+    const [searchTerm, setSearchTerm] = useState(''); // Search term state
+    const [filteredData, setFilteredData] = useState(); // State to hold filtered data
 
     const fetchTweets = () => {
         /**
@@ -35,9 +37,20 @@ const TwitterTimeSeries = () => {
         }
     }, [data]);
 
-    // Update the graph when data is available
+    // Filter tweets based on the search term
     useEffect(() => {
-        if (graphRef.current && data) {
+        if (data && searchTerm) {
+            const wordBoundaryRegex = new RegExp(`\\b${searchTerm.toLowerCase()}\\b`); // Word boundary regex
+            const filteredTweets = data.filter(tweet => wordBoundaryRegex.test(tweet.text.toLowerCase()));
+            setFilteredData(filteredTweets);
+        } else {
+            setFilteredData(data); // If no search term, show all data
+        }
+    }, [data, searchTerm]);
+
+    // Update the graph when filteredData is available
+    useEffect(() => {
+        if (graphRef.current && filteredData) {
             const counties = ['Sarasota', 'Manatee', 'Hillsborough', 'Pinellas', 'Pasco'];
             const locationArrays = {};
 
@@ -46,7 +59,7 @@ const TwitterTimeSeries = () => {
             });
 
             // Process tweet data to count tweets per county per date
-            data.forEach((tweet) => {
+            filteredData.forEach((tweet) => {
                 const date = new Date(tweet.time.$date);
                 const dateString = date.toISOString().split('T')[0]; // Extract YYYY-MM-DD
                 const location = tweet.location;
@@ -86,9 +99,30 @@ const TwitterTimeSeries = () => {
                 colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
             });
         }
-    }, [data]);
+    }, [filteredData]);
 
-    return <div ref={graphRef} style={{ width: '100%', height: '100%' }}></div>;
+    return (
+        <div>
+            {/* Search bar for filtering words */}
+            <div className="search_bar_container">
+                <input
+                    className="tweet_search_bar"
+                    type="text"
+                    placeholder="Filter tweets by words"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)} // Update search term state
+                />
+                {searchTerm && (
+                    <button className="clear_button" onClick={() => setSearchTerm('')}>
+                        Clear
+                    </button>
+                )}
+            </div>
+
+            {/* Graph container */}
+            <div ref={graphRef} style={{ width: '100%', height: '100%' }}></div>
+        </div>
+    );
 };
 
 export default TwitterTimeSeries;

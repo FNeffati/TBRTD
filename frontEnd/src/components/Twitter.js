@@ -114,37 +114,22 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         return text.replace(regex, (match) => `<span class="highlight">${match}</span>`);
     };
 
+    /**
+     * Filters the tweets based on the search term and filter mode.
+     * 
+     * @param {Array<Object>} tweets - The array of tweets to filter.
+     * @returns {Array<Object>} The filtered array of tweets.
+     */
     const filteredTweets = tweets.filter((tweet) => {
+        const regex1 = new RegExp(`\\b${searchTerm1.toLowerCase()}\\b`); 
+        const regex2 = new RegExp(`\\b${searchTerm2.toLowerCase()}\\b`);
+    
         if (filterMode === 'Exactly') {
-            return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
+            return tweet.text && regex1.test(tweet.text.toLowerCase());
         } else if (filterMode === 'OR') {
-            if (searchTerm1 !== '' || searchTerm2 !== '') {
-                if (searchTerm1 !== '' && searchTerm2 !== ''){
-                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) || tweet.text.toLowerCase().includes(searchTerm2.toLowerCase()));
-                }
-                if (searchTerm1 !== ''){
-                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()));
-                }
-                if (searchTerm2 !== ''){
-                    return tweet.text.toLowerCase().includes(searchTerm2.toLowerCase());
-                }
-            } else {
-                return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
-            }
-        } else if (filterMode === 'AND'){
-            if (searchTerm1 !== '' || searchTerm2 !== '') {
-                if (searchTerm1 !== '' && searchTerm2 !== ''){
-                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) && tweet.text.toLowerCase().includes(searchTerm2.toLowerCase()));
-                }
-                if (searchTerm1 !== ''){
-                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()));
-                }
-                if (searchTerm2 !== ''){
-                    return tweet.text.toLowerCase().includes(searchTerm2.toLowerCase());
-                }
-            } else {
-                return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
-            }
+            return tweet.text && (regex1.test(tweet.text.toLowerCase()) || regex2.test(tweet.text.toLowerCase()));
+        } else if (filterMode === 'AND') {
+            return tweet.text && (regex1.test(tweet.text.toLowerCase()) && regex2.test(tweet.text.toLowerCase()));
         }
         return true;
     });

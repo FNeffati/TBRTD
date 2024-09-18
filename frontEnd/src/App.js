@@ -112,9 +112,9 @@ function MainApp() {
                 ) : (
                     <>
                         <TimeFrameSelector onTimeFrameChange={handleTimeFrameChange} />
-                        <Filters options={Account_Type_Options} Title={"ACCOUNT TYPE"} information={"<ul><li><strong>Default:</strong> All Accounts are selected</li><li><strong>Functionality:</strong> Click an option to see tweets from accounts under that category.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('accountType', selectedOptions)} changeTitleOnSelect={true} />
                         <Filters options={Word_Cloud_Options} Title={"WORD CLOUD"} information={"<ul><li><strong>Default:</strong> Non Geo Hashtags Selected</li><li><strong>Functionality:</strong> Click an option to see the counts of hashtags under that category.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('wordCloud', selectedOptions)} isMultiChoice={false} changeTitleOnSelect={true} />
                         <Filters options={County_Options} Title={"COUNTY"} information={"<ul><li><strong>Default:</strong> All counties selected.</li><li><strong>Functionality:</strong> Upon hovering a county, the Map will display how many tweets are about that county.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('county', selectedOptions)} changeTitleOnSelect={true} />
+                        <Filters options={Account_Type_Options} Title={"ACCOUNT TYPE"} information={"<ul><li><strong>Default:</strong> All Accounts are selected</li><li><strong>Functionality:</strong> Click an option to see tweets from accounts under that category.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('accountType', selectedOptions)} changeTitleOnSelect={true} />
                     </>
                 )}
             </div>

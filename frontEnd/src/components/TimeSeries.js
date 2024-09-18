@@ -37,14 +37,24 @@ const TwitterTimeSeries = () => {
         }
     }, [data]);
 
+    // Function to escape special characters in the search term
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
     // Filter tweets based on the search term
     useEffect(() => {
-        if (data && searchTerm) {
-            const wordBoundaryRegex = new RegExp(`\\b${searchTerm.toLowerCase()}\\b`); // Word boundary regex
-            const filteredTweets = data.filter(tweet => wordBoundaryRegex.test(tweet.text.toLowerCase()));
-            setFilteredData(filteredTweets);
+        if (data) {
+            if (searchTerm) {
+                const escapedTerm = escapeRegExp(searchTerm.trim());
+                const exactWordRegex = new RegExp(`(^|\\s)${escapedTerm}($|\\s)`, 'i');
+                const filteredTweets = data.filter(tweet => exactWordRegex.test(tweet.text));
+                setFilteredData(filteredTweets);
+            } else {
+                setFilteredData(data); // If no search term, show all data
+            }
         } else {
-            setFilteredData(data); // If no search term, show all data
+            console.error('Data not available to filter');
         }
     }, [data, searchTerm]);
 

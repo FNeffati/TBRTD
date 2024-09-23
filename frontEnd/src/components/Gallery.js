@@ -6,7 +6,6 @@ import ContentHeader from './ContentHeader';
 import "../styling/Gallery.css"
 
 const GallerySwitch = ({ date, account_types }) => {
-
     return (
         <div className="Gallery">
             <div className="Component_Container">
@@ -21,5 +20,5 @@ const GallerySwitch = ({ date, account_types }) => {
             </div>
         </div>
     );
-}
+};
 export default GallerySwitch;

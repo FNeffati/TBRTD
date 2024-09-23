@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Dygraph from 'dygraphs';
 import "../styling/TimeSeries.css";
 
@@ -6,36 +6,42 @@ import "../styling/TimeSeries.css";
  * TwitterTimeSeries component renders a time series graph of tweet counts per county using Dygraphs.
  * Dygraphs package link: https://www.npmjs.com/package/dygraphs
  */
-const TwitterTimeSeries = () => {
+const TwitterTimeSeries = ({ account_types }) => {
     const graphRef = useRef(null);
     const [data, setData] = useState();
     const [searchTerm, setSearchTerm] = useState(''); // Search term state
     const [filteredData, setFilteredData] = useState(); // State to hold filtered data
 
-    const fetchTweets = () => {
-        /**
-         * Fetches all the tweet data from the server with no filtering.
-         */
+    const fetchTweets = useCallback(() => {
+        const filters = [
+            {
+                "timeFrame": "", // all counties 
+                "county": [], // all time 
+                "accountType": account_types.length ? account_types : ["Academic", "Government", "Media", "Other", "Tourism"] // Fetch all if empty
+            },
+            {
+                "retweets": true // with retweets for now 
+            }
+        ];
+    
         fetch('/get_tweets', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify([])
+            body: JSON.stringify(filters)
         })
             .then((response) => response.json())
             .then((data) => {
                 setData(data);
             })
             .catch((error) => console.error(error));
-    };
-
-    // Fetch tweets data when the component mounts or data changes
+    }, [account_types]);
+    
+    // Fetch tweets on component mount and when account types change
     useEffect(() => {
-        if (!data) {
-            fetchTweets();
-        }
-    }, [data]);
+        fetchTweets();
+    }, [fetchTweets]); 
 
     // Function to escape special characters in the search term
     function escapeRegExp(string) {
@@ -106,6 +112,7 @@ const TwitterTimeSeries = () => {
                 rollPeriod: 0,
                 width: 750,
                 height: 550,
+                pixelsPerLabel: 40,
                 colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
             });
         }
@@ -113,14 +120,13 @@ const TwitterTimeSeries = () => {
 
     return (
         <div>
-            {/* Search bar for filtering words */}
             <div className="search_bar_container">
                 <input
                     className="tweet_search_bar"
                     type="text"
                     placeholder="Filter tweets by words"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)} // Update search term state
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 {searchTerm && (
                     <button className="clear_button" onClick={() => setSearchTerm('')}>
@@ -128,8 +134,6 @@ const TwitterTimeSeries = () => {
                     </button>
                 )}
             </div>
-
-            {/* Graph container */}
             <div ref={graphRef} style={{ width: '100%', height: '100%' }}></div>
         </div>
     );

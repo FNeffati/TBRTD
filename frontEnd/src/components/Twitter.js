@@ -101,53 +101,62 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     }, [sortOrder]);
 
     /**
-     * Highlights the specified words in the text.
-     *
-     * @param {string} text - The text to highlight.
-     * @param {Array<string>} words - The words to highlight.
-     * @returns {string} The text with highlighted words.
+     * Escapes special characters in a string for use in a regular expression.
+     * @param {string} string - The string to escape.
+     * @returns {string} The escaped string.
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#escaping}
+     */ 
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    /**
+     * Filters tweets based on the search terms and filter mode.
+     * @param {Array<Object>} tweets - The array of tweets to filter.
+     * @returns {Array<Object>} The filtered array of tweets.
      */
-    const highlightText = (text, words) => {
-        if (!words.length) return text;
-
-        const regex = new RegExp(words.filter(word => word !== '').join('|'), 'gi');
-        return text.replace(regex, (match) => `<span class="highlight">${match}</span>`);
-    };
-
     const filteredTweets = tweets.filter((tweet) => {
+        if (!searchTerm1 && !searchTerm2) {
+            return true;
+        }
+    
+        const term1 = escapeRegExp(searchTerm1.trim());
+        const term2 = escapeRegExp(searchTerm2.trim());
+    
+        // Updated regex patterns for exact word matching
+        const regex1 = new RegExp(`(^|\\s)${term1}($|\\s)`, 'i');
+        const regex2 = new RegExp(`(^|\\s)${term2}($|\\s)`, 'i');
+    
         if (filterMode === 'Exactly') {
-            return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
+            return tweet.text && regex1.test(tweet.text);
         } else if (filterMode === 'OR') {
-            if (searchTerm1 !== '' || searchTerm2 !== '') {
-                if (searchTerm1 !== '' && searchTerm2 !== ''){
-                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) || tweet.text.toLowerCase().includes(searchTerm2.toLowerCase()));
-                }
-                if (searchTerm1 !== ''){
-                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()));
-                }
-                if (searchTerm2 !== ''){
-                    return tweet.text.toLowerCase().includes(searchTerm2.toLowerCase());
-                }
-            } else {
-                return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
-            }
-        } else if (filterMode === 'AND'){
-            if (searchTerm1 !== '' || searchTerm2 !== '') {
-                if (searchTerm1 !== '' && searchTerm2 !== ''){
-                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()) && tweet.text.toLowerCase().includes(searchTerm2.toLowerCase()));
-                }
-                if (searchTerm1 !== ''){
-                    return tweet.text && (tweet.text.toLowerCase().includes(searchTerm1.toLowerCase()));
-                }
-                if (searchTerm2 !== ''){
-                    return tweet.text.toLowerCase().includes(searchTerm2.toLowerCase());
-                }
-            } else {
-                return tweet.text && tweet.text.toLowerCase().includes(searchTerm1.toLowerCase());
-            }
+            return tweet.text && (regex1.test(tweet.text) || regex2.test(tweet.text));
+        } else if (filterMode === 'AND') {
+            return tweet.text && regex1.test(tweet.text) && regex2.test(tweet.text);
         }
         return true;
     });
+
+    /**
+     * Sanitizes and highlights the text based on the search terms.
+     * @param {string} text - The text to sanitize and highlight.
+     * @param {Array<string>} terms - The search terms to highlight.
+     * @returns {string} The sanitized and highlighted text.
+     */
+    const sanitizeAndHighlightText = (text, terms) => {
+        let sanitizedText = linkify(text);
+        terms.forEach(term => {
+            if (term) {
+                const escapedTerm = escapeRegExp(term.trim());
+                // Updated regex pattern for exact word highlighting
+                const regex = new RegExp(`(^|\\s)(${escapedTerm})($|\\s)`, 'gi');
+                sanitizedText = sanitizedText.replace(regex, (match, p1, p2, p3) => {
+                    return `${p1}<mark>${p2}</mark>${p3}`;
+                });
+            }
+        });
+        return DOMPurify.sanitize(sanitizedText, { ADD_ATTR: ['target'] });
+    };
 
     /**
      * Handles the change of filter mode (exact or contains).
@@ -231,25 +240,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         return text.replace(urlPattern, (url) => {
             return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
         });
-    };
-
-
-    /**
-     * Sanitizes and highlights the specified terms in the text.
-     *
-     * @param {string} text - The text to sanitize and highlight.
-     * @param {Array<string>} terms - The terms to highlight.
-     * @returns {string} The sanitized and highlighted text.
-     */
-    const sanitizeAndHighlightText = (text, terms) => {
-        let sanitizedText = linkify(text);
-        terms.forEach(term => {
-            if (term) {
-                const regex = new RegExp(`(${term})`, 'gi');
-                sanitizedText = sanitizedText.replace(regex, `<mark>$1</mark>`);
-            }
-        });
-        return DOMPurify.sanitize(sanitizedText, { ADD_ATTR: ['target'] });
     };
 
     return (

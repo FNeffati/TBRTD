@@ -84,7 +84,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         })
         .then((response) => response.json())
         .then((data) => {
-            console.log("Received tweets:", data.length);
             const sortedData = sortTweets(data);
             setTweets(sortedData);
             onTweetsFetched(sortedData);
@@ -95,7 +94,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     
 
     useEffect(() => {
-        console.log("selectedFilters changed:", selectedFilters);
         fetchTweets();
     }, [selectedFilters, selectedFilters.retweetFilter]);
 

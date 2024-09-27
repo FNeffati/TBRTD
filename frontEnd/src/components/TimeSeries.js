@@ -62,7 +62,7 @@ const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
                 setFilteredData(data); // If no search term, show all data
             }
         } else {
-            console.error('Data not available to filter');
+            console.log('Data not yet available'); 
         }
     }, [data, searchTerm]);
 

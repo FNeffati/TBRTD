@@ -89,6 +89,11 @@ const FAQ = () => {
                         </li>
                     </ul>
                     <p>
+                        The filters for word cloud and county affect both the tweet scroller and the word cloud itself. 
+                        Retweet status and account type filters, on the other hand, affect all components, including the 
+                        tweet scroller, word cloud, map, and time series plot.
+                    </p>
+                    <p>
                         Finally, the geographical areas mentioned in tweets can be using the county filter for any
                         of the five counties mentioned above. NOTE: Those indicate that the tweets were about the
                         county, not that they came from that county.
@@ -152,6 +157,13 @@ const FAQ = () => {
                             This will autofill the text filter in the tweet scroller with the selected word.
                         </p>
                     </div>
+                    <p>
+                        There are two types of word clouds presented in this dashboard: <strong>Single User Word Clouds</strong> and 
+                        <strong>Single Term Word Clouds</strong>. The Single User Word Clouds show counts that reflect 
+                        how many individual users have tweeted a specific word, ignoring duplicates. This helps reduce 
+                        the impact of spam and frequent retweeting of the same term. Single Term Word Clouds, on the 
+                        other hand, show the frequency of all terms in a given category, not limited to hashtags.
+                    </p>
                 </section>
 
                 <section>

@@ -182,7 +182,7 @@ const FloridaMap = ({ date, account_types, retweetFilter }) => {
             {hoverInfo.show && (
                 <div
                     className="map-hover-popup"
-                    style={{ left: hoverInfo.x+900, top: hoverInfo.y+200 }}
+                    style={{ left: hoverInfo.x+1100, top: hoverInfo.y+400 }}
                 >
                     {hoverInfo.county} - Tweets: {tweetCounts[hoverInfo.county] || 0}
                 </div>

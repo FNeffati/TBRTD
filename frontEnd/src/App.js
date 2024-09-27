@@ -122,7 +122,8 @@ function MainApp() {
                 information={"<ul><li><strong>Default:</strong> Without Retweets</li><li><strong>Functionality:</strong> Select to include or exclude retweets in the displayed tweets.</li></ul>"} 
                 onChange={(selectedOptions) => handleFilterChange('retweetFilter', selectedOptions[0])}
                 isMultiChoice={false} 
-                changeTitleOnSelect={true} 
+                changeTitleOnSelect={true}
+                defaultSelected={[selectedFilters.retweetFilter]} 
             />
         </div>
     );

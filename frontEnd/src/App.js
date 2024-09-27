@@ -162,11 +162,11 @@ function MainApp() {
                 </div>
                 <div className="Word_Cloud_container">
                     <ContentHeader title={"Word Cloud"} content={"Click on a word to see the tweets that contain it. Clicking a word will override your current search term."} />
-                    <WordCloud cloud_type={selectedFilters.wordCloud} tweets={tweets} onWordCloudClick={handleWordClick} retweetFilter={selectedFilters.retweetFilter}/>
+                    <WordCloud cloud_type={selectedFilters.wordCloud} tweets={tweets} onWordCloudClick={handleWordClick}/>
                 </div>
                 <div className="Map_container">
                     <ContentHeader title={"Map / Time Series"} content={"Explore the data with visual representations of county of origin (Map) and tweets over time (Time-Series)."}/>
-                    <GallerySwitch account_types={selectedFilters.accountType} date={selectedFilters.timeFrame} retweetFilter={selectedFilters.retweetFilter} />
+                    <GallerySwitch account_types={selectedFilters.accountType} date={selectedFilters.timeFrame} retweetFilter={selectedFilters.retweetFilter[0]} />
                 </div>
             </div>
         </div>

@@ -18,34 +18,38 @@ Leaflet: https://react-leaflet.js.org
  * @param {string} props.date - The date for which to fetch tweet counts.
  * @param {Array<string>} props.account_types - The account types for which to fetch tweet counts.
  */
-const FloridaMap = ({ date, account_types }) => {
+const FloridaMap = ({ date, account_types, retweetFilter }) => {
 
-    const [tweetCounts, setTweetCounts] = useState(0)
+    const [tweetCounts, setTweetCounts] = useState({})
 
     /**
      * Fetches tweet counts for the specified date and account types.
      */
     const fetchCounts = () => {
-        fetch('/get_counts',
-            {
-                'method':'POST',
-                headers : {
-                    'Content-Type':'application/json'
-                },
-                body: JSON.stringify([date, account_types])
+        const retweetsIncluded = retweetFilter === 'With Retweets';
+        fetch('/get_counts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                date,
+                account_types,
+                retweets: retweetsIncluded
             })
+        })
             .then((response) => response.json())
             .then((data) => {
-                setTweetCounts(data.counts)
+                setTweetCounts(data.counts || {});
             })
             .catch((error) => {
-                console.error(error);
+                console.error("Failed to fetch tweet counts:", error);
             });
     };
 
     useEffect(() => {
         fetchCounts();
-    }, [date, account_types]);
+    }, [date, account_types, retweetFilter]);
 
     /**
      * Normalizes tweet counts to a range of 0 to 1 based on the maximum count.

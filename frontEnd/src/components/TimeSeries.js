@@ -6,13 +6,15 @@ import "../styling/TimeSeries.css";
  * TwitterTimeSeries component renders a time series graph of tweet counts per county using Dygraphs.
  * Dygraphs package link: https://www.npmjs.com/package/dygraphs
  */
-const TwitterTimeSeries = ({ account_types }) => {
+const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
     const graphRef = useRef(null);
     const [data, setData] = useState();
     const [searchTerm, setSearchTerm] = useState(''); // Search term state
     const [filteredData, setFilteredData] = useState(); // State to hold filtered data
 
     const fetchTweets = useCallback(() => {
+        const withRetweets = retweetFilter === 'With Retweets';
+
         const filters = [
             {
                 "timeFrame": "", // all counties 
@@ -20,7 +22,7 @@ const TwitterTimeSeries = ({ account_types }) => {
                 "accountType": account_types.length ? account_types : ["Academic", "Government", "Media", "Other", "Tourism"] // Fetch all if empty
             },
             {
-                "retweets": true // with retweets for now 
+                "retweets": withRetweets
             }
         ];
     
@@ -36,7 +38,7 @@ const TwitterTimeSeries = ({ account_types }) => {
                 setData(data);
             })
             .catch((error) => console.error(error));
-    }, [account_types]);
+    }, [account_types, retweetFilter]);
     
     // Fetch tweets on component mount and when account types change
     useEffect(() => {

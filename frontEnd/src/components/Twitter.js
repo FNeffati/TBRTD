@@ -16,9 +16,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm1, setSearchTerm1] = useState('');
     const [searchTerm2, setSearchTerm2] = useState('');
-    const [filterMode, setFilterMode] = useState('Exactly');
-    const [containsRetweets, setContainsRetweets] = useState(true);
-    const [retweets, setRetweets] = useState("With Retweets");
+    const [filterMode, setFilterMode] = useState('Exact Phrase');
     const [sortOrder, setSortOrder] = useState("Most Recent");
 
     /**
@@ -75,6 +73,8 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
      * Fetches tweets from the server based on selected filters and retweets setting.
      */
     const fetchTweets = () => {
+        const containsRetweets = selectedFilters.retweetFilter[0] === "With Retweets"; 
+    
         fetch('/get_tweets', {
             method: 'POST',
             headers: {
@@ -82,19 +82,22 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             },
             body: JSON.stringify([selectedFilters, { "retweets": containsRetweets }])
         })
-            .then((response) => response.json())
-            .then((data) => {
-                const sortedData = sortTweets(data);  // Sort the data immediately after fetching
-                setTweets(sortedData);
-                onTweetsFetched(sortedData);
-                setCurrentPage(1);
-            })
-            .catch((error) => console.error(error));
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Received tweets:", data.length);
+            const sortedData = sortTweets(data);
+            setTweets(sortedData);
+            onTweetsFetched(sortedData);
+            setCurrentPage(1);
+        })
+        .catch((error) => console.error("Error fetching tweets:", error));
     };
+    
 
     useEffect(() => {
+        console.log("selectedFilters changed:", selectedFilters);
         fetchTweets();
-    }, [selectedFilters, containsRetweets]);
+    }, [selectedFilters, selectedFilters.retweetFilter]);
 
     useEffect(() => {
         setTweets(prevTweets => sortTweets(prevTweets));
@@ -127,11 +130,11 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
         const regex1 = new RegExp(`(^|\\s)${term1}($|\\s)`, 'i');
         const regex2 = new RegExp(`(^|\\s)${term2}($|\\s)`, 'i');
     
-        if (filterMode === 'Exactly') {
+        if (filterMode === 'Exact Phrase') {
             return tweet.text && regex1.test(tweet.text);
-        } else if (filterMode === 'OR') {
+        } else if (filterMode === 'Contains Either') {
             return tweet.text && (regex1.test(tweet.text) || regex2.test(tweet.text));
-        } else if (filterMode === 'AND') {
+        } else if (filterMode === 'Contains Both') {
             return tweet.text && regex1.test(tweet.text) && regex2.test(tweet.text);
         }
         return true;
@@ -166,24 +169,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const handleFilterChange = (event) => {
         setFilterMode(event.target.value);
     };
-
-    /**
-     * Handles the change of retweets setting.
-     *
-     * @param {Event} event - The change event.
-     */
-    const handleContainRetweetsChange = (event) => {
-        if(event.target.value === "With Retweets"){
-            setRetweets('With Retweets');
-            setContainsRetweets(true);
-        }
-        else if(event.target.value === "Without Retweets"){
-            setRetweets('Without Retweets');
-            setContainsRetweets(false);
-        }
-    };
+    
     useEffect(() => {
-        if ((filterMode === 'AND') || (filterMode ==='OR')){
+        if ((filterMode === 'Contains Both') || (filterMode ==='Contains Either')){
             if(searchTerm1 === ''){
                 setSearchTerm1(clickedWord);
             }
@@ -191,7 +179,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                 setSearchTerm2(clickedWord);
             }
         }
-        else if(filterMode === 'Exactly'){
+        else if(filterMode === 'Exact Phrase'){
             setSearchTerm1(clickedWord);
         }
     }, [filterMode, clickedWord, searchTerm1, searchTerm2]);
@@ -247,7 +235,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
             <div className="tweets_info"></div>
             <div className="tweets_header">
                 <div className="search_bar_container">
-                    {filterMode === 'Exactly' && (
+                    {filterMode === 'Exact Phrase' && (
                         <div>
                             <input
                                 className="tweet_search_bar"
@@ -263,7 +251,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             )}
                         </div>
                     )}
-                    {filterMode === 'OR'  && (
+                    {filterMode === 'Contains Either'  && (
                         <div>
                             <input
                                 className="tweet_search_bar"
@@ -291,7 +279,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             )}
                         </div>
                     )}
-                    {filterMode === 'AND'  && (
+                    {filterMode === 'Contains Both'  && (
                         <div>
                             <input
                                 className="tweet_search_bar"
@@ -321,13 +309,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                     )}
                     <div className="dropdown_menu">
                         <select className="filter_dropdown" value={filterMode} onChange={handleFilterChange}>
-                            <option value="Exactly">Exactly</option>
-                            <option value="OR">OR</option>
-                            <option value="AND">AND</option>
-                        </select>
-                        <select className="containRetweets" value={retweets} onChange={handleContainRetweetsChange}>
-                            <option value="With Retweets">With Retweets</option>
-                            <option value="Without Retweets">Without Retweets</option>
+                            <option value="Exact Phrase">Exact Phrase</option>
+                            <option value="Contains Either">Contains Either</option>
+                            <option value="Contains Both">Contains Both</option>
                         </select>
 
                         <select className="sortOrder" value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>

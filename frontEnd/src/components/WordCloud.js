@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactWordcloud from "react-wordcloud";
 import "../styling/WordCloud.css";
 import 'tippy.js/dist/tippy.css';
@@ -19,36 +19,47 @@ React Word Cloud Package: https://www.npmjs.com/package/react-wordcloud
 const WordCloud = ({ cloud_type, tweets, onWordCloudClick }) => {
     const [words, setWords] = useState([{ text: "LOADING", value: 20 }]);
 
+    // Cache to store word clouds
+    const cache = useRef({});
+
     useEffect(() => {
         if (tweets.length > 0) {
-            try {
-                if (cloud_type.length === 0 || cloud_type[0] === 'Non Geo Single Terms') {
-                    const top100Words = Util.nonGeoRegularTermWordCloud(tweets);
-                    setWords(top100Words);
+            // Create a unique key for caching based on cloud_type and tweets
+            const cacheKey = JSON.stringify({ cloud_type, tweets: tweets.map(tweet => tweet.id).join('-') });
+
+            // Check if the data is already in cache
+            if (cache.current[cacheKey]) {
+                setWords(cache.current[cacheKey]);
+            } else {
+                // Generate the word cloud based on the cloud_type
+                try {
+                    let wordCloudData = [];
+                    if (cloud_type.length === 0 || cloud_type[0] === 'Non Geo Single Terms') {
+                        wordCloudData = Util.nonGeoRegularTermWordCloud(tweets);
+                    }
+                    else if (cloud_type[0] === "Geo Single Terms") {
+                        wordCloudData = Util.geoRegularTermWordCloud(tweets);
+                    }
+                    else if (cloud_type[0] === "Geo Hashtags") {
+                        wordCloudData = Util.geohashtagsCloud(tweets);
+                    }
+                    else if (cloud_type[0] === "Non-Geo Hashtags") {
+                        wordCloudData = Util.nonGeohashtagsCloud(tweets);
+                    }
+                    else if (cloud_type[0] === "Geo Single User") {
+                        wordCloudData = Util.geoSingleUserWordCloud(tweets);
+                    }
+                    else if (cloud_type[0] === "Non-Geo Single User") {
+                        wordCloudData = Util.nonGeoSingleUserWordCloud(tweets);
+                    }
+                    
+                    // Store generated data in cache
+                    cache.current[cacheKey] = wordCloudData;
+                    setWords(wordCloudData);
+                } catch (error) {
+                    console.error("Error generating word cloud:", error);
+                    setWords([{ text: "Error generating cloud", value: 20 }]);
                 }
-                else if (cloud_type[0] === "Geo Single Terms") {
-                    const hashtags = Util.geoRegularTermWordCloud(tweets);
-                    setWords(hashtags);
-                }
-                else if (cloud_type[0] === "Geo Hashtags") {
-                    const hashtags = Util.geohashtagsCloud(tweets);
-                    setWords(hashtags);
-                }
-                else if (cloud_type[0] === "Non-Geo Hashtags") {
-                    const hashtags = Util.nonGeohashtagsCloud(tweets);
-                    setWords(hashtags);
-                }
-                else if (cloud_type[0] === "Geo Single User") {
-                    const topWords = Util.geoSingleUserWordCloud(tweets);
-                    setWords(topWords);
-                }
-                else if (cloud_type[0] === "Non-Geo Single User") {
-                    const topWords = Util.nonGeoSingleUserWordCloud(tweets);
-                    setWords(topWords);
-                }
-            } catch (error) {
-                console.error("Error generating word cloud:", error);
-                setWords([{ text: "Error generating cloud", value: 20 }]);
             }
         } else {
             setWords([{ text: "LOADING", value: 20 }]);

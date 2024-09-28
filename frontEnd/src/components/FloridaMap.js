@@ -1,15 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {MapContainer, TileLayer, GeoJSON, Marker} from 'react-leaflet';
+import React, { useEffect, useState, useRef } from 'react';
+import { MapContainer, TileLayer, GeoJSON, Marker } from 'react-leaflet';
 import floridaCounties from './geojson-fl-counties-fips.json';
 import "../styling/FloridaMap.css";
 import L from 'leaflet';
-
-/*
-Citations:
-GeoJSON source: https://github.com/danielcs88/fl_geo_json
-Leaflet: https://react-leaflet.js.org
-*/
-
 
 /**
  * FloridaMap component renders a map of Florida with counties and tweet counts.
@@ -19,32 +12,51 @@ Leaflet: https://react-leaflet.js.org
  * @param {Array<string>} props.account_types - The account types for which to fetch tweet counts.
  */
 const FloridaMap = ({ date, account_types, retweetFilter }) => {
+    const [tweetCounts, setTweetCounts] = useState({});
 
-    const [tweetCounts, setTweetCounts] = useState({})
+    // Cache to store tweet counts
+    const cache = useRef({});
+
+    /**
+     * Generates a unique cache key based on date, account types, and retweet filter.
+     * @returns {string} The generated cache key.
+     */
+    const generateCacheKey = () => {
+        return JSON.stringify({ date, account_types, retweetFilter });
+    };
 
     /**
      * Fetches tweet counts for the specified date and account types.
      */
     const fetchCounts = () => {
         const retweetsIncluded = retweetFilter === 'With Retweets';
-        fetch('/get_counts', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                date,
-                account_types,
-                retweets: retweetsIncluded
+        const cacheKey = generateCacheKey();
+
+        // Check if the data is already in cache
+        if (cache.current[cacheKey]) {
+            setTweetCounts(cache.current[cacheKey]);
+        } else {
+            fetch('/get_counts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    date,
+                    account_types,
+                    retweets: retweetsIncluded
+                })
             })
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setTweetCounts(data.counts || {});
-            })
-            .catch((error) => {
-                console.error("Failed to fetch tweet counts:", error);
-            });
+                .then((response) => response.json())
+                .then((data) => {
+                    setTweetCounts(data.counts || {});
+                    // Store the data in cache
+                    cache.current[cacheKey] = data.counts || {};
+                })
+                .catch((error) => {
+                    console.error("Failed to fetch tweet counts:", error);
+                });
+        }
     };
 
     useEffect(() => {
@@ -57,7 +69,6 @@ const FloridaMap = ({ date, account_types, retweetFilter }) => {
      * @param {Object} tweetCounts - The tweet counts by county.
      * @returns {Object} The normalized tweet counts.
      */
-
     const normalizeTweetCounts = (tweetCounts) => {
         const maxCount = Math.max(...Object.values(tweetCounts));
         const normalizedCounts = {};
@@ -70,21 +81,6 @@ const FloridaMap = ({ date, account_types, retweetFilter }) => {
     };
 
     const normalizedTweetCounts = normalizeTweetCounts(tweetCounts);
-    const colorMap = {
-        'Manatee': 'blue',
-        'Sarasota': 'green',
-        'Hillsborough': 'red',
-        'Pinellas': 'orange',
-        'Pasco': 'purple'
-    };
-
-    const rgbMap = {
-        'blue': [0, 0, 255],
-        'green': [0, 128, 0],
-        'red': [255, 0, 0],
-        'orange': [255, 165, 0],
-        'purple': [128, 0, 128]
-    };
 
     /**
      * Determines the fill color for a county based on tweet count intensity.
@@ -94,19 +90,6 @@ const FloridaMap = ({ date, account_types, retweetFilter }) => {
      * @returns {string} The RGB color string for the county.
      */
     const getColor = (countyName, normalizedCount) => {
-        /*
-        const color = colorMap[countyName] || 'black';
-        const [r, g, b] = rgbMap[color];
-
-        const intensity = Math.round(255 * normalizedCount);
-        const adjustedR = Math.min(r, r + intensity);
-        const adjustedG = Math.min(g, g + intensity);
-        const adjustedB = Math.min(b, b + intensity);
-
-        return `rgb(${adjustedR}, ${adjustedG}, ${adjustedB})`;
-        // return `rgb(${r}, ${g}, ${b})`;
-        */
-
         const intensity = Math.round(255 * normalizedCount);
         return `rgb(${255}, ${255 - intensity}, ${255 - intensity})`;
     };
@@ -129,6 +112,7 @@ const FloridaMap = ({ date, account_types, retweetFilter }) => {
             weight: 5,
         };
     };
+
     const [hoverInfo, setHoverInfo] = useState({ show: false, county: '', x: 0, y: 0 });
 
     /**
@@ -149,7 +133,6 @@ const FloridaMap = ({ date, account_types, retweetFilter }) => {
             setHoverInfo({ show: false, county: '', x: 0, y: 0 });
         });
     };
-
 
     const countyMarkers = floridaCounties.features.map((feature, index) => {
         const countyName = feature.properties.NAME;
@@ -182,7 +165,7 @@ const FloridaMap = ({ date, account_types, retweetFilter }) => {
             {hoverInfo.show && (
                 <div
                     className="map-hover-popup"
-                    style={{ left: hoverInfo.x+1100, top: hoverInfo.y+400 }}
+                    style={{ left: hoverInfo.x + 1100, top: hoverInfo.y + 400 }}
                 >
                     {hoverInfo.county} - Tweets: {tweetCounts[hoverInfo.county] || 0}
                 </div>
@@ -219,8 +202,5 @@ const calculateCentroid = (coordinates) => {
 
     return centroid;
 };
-
-
-
 
 export default FloridaMap;

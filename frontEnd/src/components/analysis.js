@@ -4,7 +4,7 @@ class Util {
     word clouds and filtering words based on specific criteria.
      */
     static primaryLocations = ['Petersburg', 'Alligator Point', 'Amelia City', 'Amelia Island', 'American Beach', "Anna Maria Island",
-        'Anna Maria', "Anne's Beach", 'Atlantic Beach', 'Bahia Honda Key', 'Bal Harbour', 'Ballast Key',
+        'Anna Maria','Anna','Maria','Island', "Anne's Beach", 'Atlantic Beach', 'Bahia Honda Key', 'Bal Harbour', 'Ballast Key',
         'Belleair Beach', 'Belleair Shore', 'Bethune Beach', 'Beverly Beach', 'Big Lagoon State Park',
         'Bill Baggs Cape Florida State Park', 'Boca Chica Key', 'Boca Grande', 'Boca Raton',
         'Boneyard Beach', 'Bonita Springs', 'Boynton Beach', 'Bradenton Beach', 'Briny Breezes',
@@ -25,7 +25,7 @@ class Util {
         'John D. MacArthur Beach State Park', 'Juno Beach', 'Juno Dunes Natural Area',
         'Jupiter Inlet Colony', 'Jupiter Island', 'Jupiter', 'Key Biscayne', 'Key Colony Beach', 'Key West',
         'Laguna Beach', 'Lake Worth Beach', 'Lanark Village', 'Lauderdale-by-the-Sea', 'Lido Key',
-        'Little Duck Key', 'Little Gasparilla Island', 'Little Talbot Island', 'Loggerhead Park', 'Long Key',
+        'Little Duck Key', 'Little Gasparilla Island', 'Little Talbot Island', 'Loggerhead Park','Longboat', 'Long Key',
         'Long Key State Park', 'Lovers Key State Park', 'Lower Matecumbe Key', 'Madeira Beach', 'Manalapan',
         'Manasota Key', 'Marathon', 'Marco Island', 'Marquesas Keys', 'Mashes Sands', 'Matanzas Inlet',
         'Matheson Hammock Park', 'Melbourne Beach', 'Mexico Beach', 'Miami Beach', 'Miramar Beach',
@@ -34,13 +34,13 @@ class Util {
         "Ormond Beach", "Ormond-by-the-Sea", "Osprey", "Palm Beach Island", "Palm Beach Shores", "Palm Key",
         "Panama City Beach", "Paradise Park", "Pensacola Beach", "Perdido Key",
         "Pine Island, Hernando County", "Playalinda Beach", "Pompano Beach", "Ponce de León Island",
-        "Ponce Inlet", "Ponte Vedra Beach", "Redington Beach", "Redington Shores", "St. Augustine Beach",
+        "Ponce Inlet", "Ponte Vedra Beach", "Redington Beach", "Redington Shores",'Southwest', "St. Augustine Beach",
         "St. Pete Beach", "Sandestin Golf and Beach Resort", "Santa Rosa Island", "Satellite Beach",
         "Scout Key", "Sea Ranch Lakes", "Seaside", "Sebastian Inlet State Park", "Siesta Key",
         "Smathers Beach", "South Beach", "South Beaches", "South Palm Beach", "South Patrick Shores",
         "South Venice", "St. Andrews State Park", "St. George Island", "St. George Island State Park",
         "St. Lucie Inlet Preserve State Park", "St. Teresa", "St. Vincent Island", "Summer Haven",
-        "Sunny Isles Beach", "Sunset Beach", "Surfside",
+        "Sunny Isles Beach", "Sunset Beach", "Surfside",'South','West', 'East', 'North',
         "T.H. Stone Memorial St. Joseph Peninsula State Park", "Tea Table Key", "Treasure Island", "Venice",
         "Vilano Beach", "Virginia Key", "Wabasso Beach", "Wilbur-By-The-Sea", "Woman Key",
         "Fort Zachary Taylor Historic State Park", 'Jacksonville', 'Miami', 'Tampa', 'Orlando', 'St. Petersburg', 'Hialeah', 'Port St. Lucie',
@@ -189,7 +189,7 @@ class Util {
         'algae bloom', 'blue green algal', 'raw sewage', 'oil leaks', 'oil spillage', 'county', 'hillsborough',
         'counties','a', 'and', 'the', 'if', 'it', 'is', 'with', 'na', 'in', 'com', 'https', 'http', '.', 'of', 'to', 'www', 'on',
         "https", "http", "video", "image", "photo", "'", "news", "html", "com", "www",
-        "storylink", "usf", "wusf", "edu", "red", "tide", "redtide", "cameron", "camerin", "herrin", "camerinherrin","cameronherrin", "justice",
+        "storylink", "usf", "wusf", "edu", "red", "tide","tides", "redtide", "cameron", "camerin", "herrin", "camerinherrin","cameronherrin", "justice",
         'rt', 'at', '!', '$', '%', '(', ')', '.', ':', ';', '?','#', ',', '[', ']', '{', '|', '}', 'or', 'i', '-', '&amp;', 'justiceforcameronherrin', "http",
 
         'democrat', 'democratic', 'republican', 'ron' , '1', 'scotts', 'rick', 'scott', 'gop', 'demcastfl', 'vote blue', 'voteblue', 'votered',
@@ -199,6 +199,8 @@ class Util {
         'trump', 'mike pence', 'mikepence', 'pence', 'joebiden','joe biden', 'biden', 'kamala harris', 'kamalaharris', 'crist', 'charlie christ', 'charliechrist', 'andrew gillum','rondesantis', 'andrewgillum',
         'gillum', 'kriseman', 'richard kriseman', 'ken welch', 'george cretekos', 'cretekos', 'buckhorn', 'bob buckhorn',
         'jane castor', 'janecastor', 'castor', 'john holic', 'john holic', 'holic', 'ron feinsod', 'twitter', 'status', 'rickscott', 'rick',
+        'redtiderick', 'redtideron', 'removeron', 'trumpmaga', 'gillumforgovernor', 'deathdesantis', 'maga', 'qanon', 'rondeathsantis', 
+        'trumptampa', 'rondesantes', 'demvoice1', 'notscott',
 
         "x", "a", "a's", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", "again", "against", "ain't", "all", "almost",
         "alone", "along", "already", "also", "although", "always", "am", "among", "amongst", "an", "and", "another", "any", "anybody",
@@ -294,22 +296,31 @@ class Util {
      * @returns {Array<object>} An array of word-frequency objects, excluding geographic terms and stop words.
      */
     static nonGeoRegularTermWordCloud(tweets) {
-        const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
-
-        const urlRegex = /https?:\/\/\S+/g
+        const urlRegex = /https?:\/\/\S+/g;
         const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
         const usernamePattern = /@[A-Za-z0-9._-]+/g;
-        let replacedText = flattenedText.replace(RTPattern, '').replace(usernamePattern, '').trim();
-        replacedText = replacedText.replace(urlRegex, '')
-
-        // punctuation
-        const punctuationPattern = /[^\w\s]|_/g
-        replacedText = replacedText.replace(' ', '').replace(punctuationPattern, '')
-
-        const { removeStopwords } = require('stopword')
-        let filteredWords = removeStopwords(replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase())));
-        filteredWords = filteredWords.filter(word => !Util.locations.includes(word.toLowerCase()))
-
+        const punctuationPattern = /[^\w\s]|_/g;
+    
+        // Convert stop words and locations into Sets for faster lookups
+        const stopWordsSet = new Set(Util.stopWords);
+        const locationsSet = new Set(Util.locations);
+    
+        // Combine replace operations and flatten text in one go
+        const flattenedText = tweets.map(item => item.text)
+            .join(' ')
+            .toLowerCase()
+            .replace(RTPattern, '')         // Remove RT patterns
+            .replace(usernamePattern, '')   // Remove usernames
+            .replace(urlRegex, '')          // Remove URLs
+            .replace(punctuationPattern, ' ')  // Replace punctuation with space
+            .trim();
+    
+        // Split the cleaned text into words
+        const words = flattenedText.split(/\s+/);
+    
+        // Filter out stop words and location words
+        const filteredWords = words.filter(word => !stopWordsSet.has(word) && !locationsSet.has(word));
+    
         return Util.countWords(filteredWords);
     }
 
@@ -319,26 +330,31 @@ class Util {
      * @returns {Array<object>} An array of word-frequency objects, including only geographic terms.
      */
     static geoRegularTermWordCloud(tweets) {
-        const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase();
-
-        // Defining patterns
-        //"RT @username:" & "@username"
+        const urlRegex = /https?:\/\/\S+/g;
         const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
         const usernamePattern = /@[A-Za-z0-9._-]+/g;
-        let replacedText = flattenedText.replace(RTPattern, '').replace(usernamePattern, '').trim();
-
-        // URL Pattern
-        const urlRegex = /https?:\/\/\S+/g;
-        replacedText = replacedText.replace(urlRegex, '')
-
-        // punctuation
-        const punctuationPattern = /[^\w\s]|_/g
-        replacedText = replacedText.replace(' ', '').replace(punctuationPattern, '')
-
-        const { removeStopwords } = require('stopword')
-        let filteredWords = removeStopwords(replacedText.split(/\s+/).filter(word => !Util.stopWords.includes(word.toLowerCase())));
-        filteredWords = filteredWords.filter(word => Util.locations.includes(word.toLowerCase()))
-
+        const punctuationPattern = /[^\w\s]|_/g;
+    
+        // Convert stop words and locations into Sets
+        const stopWordsSet = new Set(Util.stopWords);
+        const locationsSet = new Set(Util.locations);
+    
+        // Combine replace operations and flatten text in one go
+        const flattenedText = tweets.map(item => item.text)
+            .join(' ')
+            .toLowerCase()
+            .replace(RTPattern, '')         // Remove RT patterns
+            .replace(usernamePattern, '')   // Remove usernames
+            .replace(urlRegex, '')          // Remove URLs
+            .replace(punctuationPattern, ' ')  // Replace punctuation with space
+            .trim();
+    
+        // Split the cleaned text into words
+        const words = flattenedText.split(/\s+/);
+    
+        // Filter words: remove stop words and keep only location words
+        const filteredWords = words.filter(word => !stopWordsSet.has(word) && locationsSet.has(word));
+    
         return Util.countWords(filteredWords);
     }
 
@@ -350,21 +366,24 @@ class Util {
     static geohashtagsCloud(tweets) {
         const punctuationPattern = /[^\w\s#]|_/g;
         const urlRegex = /https?:\/\/\S+/g;
-        const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase().replace(punctuationPattern, ' ').replace(urlRegex, '');
 
+        // Convert locations into a Set for faster lookups
+        const locationsSet = new Set(Util.locations);
+
+        // Combine replace operations and flatten text into a single pass
+        const flattenedText = tweets.map(item => item.text)
+            .join(' ')
+            .toLowerCase()
+            .replace(urlRegex, '')       // Remove URLs
+            .replace(punctuationPattern, ' ');  // Replace punctuation with space
+
+        // Split the cleaned text into words
         const words = flattenedText.split(/\s+/);
-        const hashtagPattern = /#(\w+)/g;
 
-        return Util.countWords(words
-            .filter(word => {
-                const match = hashtagPattern.exec(word);
-                if (match && match.index === 0 && match[1] !== undefined) {
-                    const location = match[1].toLowerCase();
-                    return Util.locations.includes(location);
-                }
-                return false;
-            })
-            .map(word => word.substring(1)));
+        // Use a map to count valid location hashtags
+        const validHashtags = words.filter(word => word.startsWith('#') && locationsSet.has(word.substring(1)));
+
+        return Util.countWords(validHashtags.map(word => word.substring(1)));
     }
 
     /**
@@ -373,57 +392,71 @@ class Util {
      * @returns {Array<object>} An array of hashtag-frequency objects, excluding geographic hashtags and stop words.
      */
     static nonGeohashtagsCloud(tweets) {
-        const punctuationPattern = /[^\w\s#]|_/g;
         const urlRegex = /https?:\/\/\S+/g;
-        const flattenedText = tweets.map(item => item.text).join(' ').toLowerCase().replace(punctuationPattern, ' ').replace(urlRegex, '');
-
+        const punctuationPattern = /[^\w\s#]|_/g;
+    
+        // Convert stop words and locations into Sets for O(1) lookups
+        const stopWordsSet = new Set(Util.stopWords);
+        const locationsSet = new Set(Util.locations);
+    
+        // Combine replace operations and flatten text in one go
+        const flattenedText = tweets.map(item => item.text)
+            .join(' ')
+            .toLowerCase()
+            .replace(urlRegex, '')          // Remove URLs
+            .replace(punctuationPattern, ' ')  // Replace punctuation with space
+            .trim();
+    
+        // Split the cleaned text into words
         const words = flattenedText.split(/\s+/);
-        const hashtagPattern = /#(\w+)/g;
-
-        return Util.countWords(words
-            .filter(word => {
-                const match = hashtagPattern.exec(word);
-                if (match && match.index === 0 && match[1] !== undefined) {
-                    const location = match[1].toLowerCase();
-                    return !Util.locations.includes(location) && !Util.stopWords.includes(location); // Negate to filter out words in Util.locations
-                }
-                return false;
-            })
-            .map(word => word.substring(1)));
+    
+        // Use a filter and map to collect valid non-geo hashtags
+        const validHashtags = words.filter(word => {
+            // Check if word starts with '#' and is not in locations or stop words
+            if (word.startsWith('#')) {
+                const hashtag = word.substring(1); // Remove the '#'
+                return !locationsSet.has(hashtag) && !stopWordsSet.has(hashtag);
+            }
+            return false;
+        }).map(word => word.substring(1)); // Remove the '#' for counting
+    
+        return Util.countWords(validHashtags);
     }
 
 
     static geoSingleUserWordCloud(tweets) {
         const wordUsers = new Map();
+        const urlPattern = /https?:\/\/\S+/gi;
+        const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
+        const usernamePattern = /@[A-Za-z0-9._-]+/g;
+        const punctuationPattern = /[^\w\s]|_/g;
+        const { removeStopwords } = require('stopword');
+    
+        // Convert stop words and locations into Sets for faster lookups
+        const stopWordsSet = new Set(Util.stopWords);
+        const locationsSet = new Set(Util.locations);
     
         tweets.forEach(tweet => {
-            let userId = tweet.author_id || tweet.id;
-            if (!userId) {
-                console.warn('Could not find user ID for tweet:', tweet);
-                return; // Skip this tweet
-            }
+            const userId = tweet.author_id || tweet.id;
+            if (!userId) return; // Skip tweet if user ID is not available
     
             let text = tweet.text || '';
     
-            // Remove RT patterns, usernames, punctuation, and URLs
-            const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
-            const usernamePattern = /@[A-Za-z0-9._-]+/g;
-            const punctuationPattern = /[^\w\s]|_/g;
-            const urlPattern = /https?:\/\/\S+/gi;
-            text = text.replace(RTPattern, '')
-                        .replace(usernamePattern, '')
-                        .replace(punctuationPattern, '')
-                        .replace(urlPattern, '')
-                        .toLowerCase()
-                        .trim();
+            // Combine all replace operations into a single pass
+            text = text
+                .replace(RTPattern, '')
+                .replace(usernamePattern, '')
+                .replace(urlPattern, '')
+                .replace(punctuationPattern, '')
+                .toLowerCase()
+                .trim();
     
-            // Split into words and filter for location words only
-            const { removeStopwords } = require('stopword');
+            // Split text into words and filter only location words
             const words = removeStopwords(text.split(/\s+/).filter(word => 
-                !Util.stopWords.includes(word) && Util.locations.includes(word)
+                !stopWordsSet.has(word) && locationsSet.has(word)
             ));
     
-            // Only process if there are location words (indicating a geo-related tweet)
+            // If there are valid location words, process them
             if (words.length > 0) {
                 words.forEach(word => {
                     if (!wordUsers.has(word)) {
@@ -434,6 +467,7 @@ class Util {
             }
         });
     
+        // Convert the wordUsers Map to an array and sort by frequency
         const wordFrequencyArray = Array.from(wordUsers.entries()).map(([word, users]) => ({
             text: word,
             value: users.size
@@ -445,35 +479,37 @@ class Util {
 
     static nonGeoSingleUserWordCloud(tweets) {
         const wordUsers = new Map();
+        const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+|httpst?[^\s]+)/gi;
+        const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
+        const usernamePattern = /@[A-Za-z0-9._-]+/g;
+        const punctuationPattern = /[^\w\s]|_/g;
+        const { removeStopwords } = require('stopword');
+    
+        // Convert stop words and locations into Sets for faster lookups 
+        const stopWordsSet = new Set(Util.stopWords);
+        const locationsSet = new Set(Util.locations);
     
         tweets.forEach(tweet => {
-            let userId = tweet.author_id || tweet.id;
-            if (!userId) {
-                console.warn('Could not find user ID for tweet:', tweet);
-                return; // Skip this tweet
-            }
+            const userId = tweet.author_id || tweet.id;
+            if (!userId) return;
     
             let text = tweet.text || '';
+            
+            // Combine replacements into one pass
+            text = text
+                .replace(RTPattern, '')
+                .replace(usernamePattern, '')
+                .replace(urlPattern, '')
+                .replace(punctuationPattern, '')
+                .toLowerCase()
+                .trim();
     
-            // Remove RT patterns, usernames, punctuation, and URLs
-            const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
-            const usernamePattern = /@[A-Za-z0-9._-]+/g;
-            const punctuationPattern = /[^\w\s]|_/g;
-            const urlPattern = /https?:\/\/\S+/gi;
-            text = text.replace(RTPattern, '')
-                        .replace(usernamePattern, '')
-                        .replace(punctuationPattern, '')
-                        .replace(urlPattern, '')
-                        .toLowerCase()
-                        .trim();
+            // Filter out stop words and location words in one go
+            const words = removeStopwords(text.split(/\s+/)).filter(word => 
+                !stopWordsSet.has(word) && !locationsSet.has(word)
+            );
     
-            // Split into words and filter out stop words and location words
-            const { removeStopwords } = require('stopword');
-            const words = removeStopwords(text.split(/\s+/).filter(word => 
-                !Util.stopWords.includes(word) && !Util.locations.includes(word)
-            ));
-    
-            // Process all non-location words
+            // Update word-user mapping
             words.forEach(word => {
                 if (!wordUsers.has(word)) {
                     wordUsers.set(word, new Set());

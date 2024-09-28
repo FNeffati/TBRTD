@@ -60,7 +60,14 @@ def get_tweets():
 
     try:
         retweets = request_body[1]['retweets']
-        time_frame = request_body[0]['timeFrame'].split(' ')
+        # Check if timeFrame is a list containing a single string
+        if isinstance(request_body[0]['timeFrame'], list) and len(request_body[0]['timeFrame']) == 1:
+            # Split the single string into start_date and end_date
+            time_frame_str = request_body[0]['timeFrame'][0]
+            time_frame = time_frame_str.split(' ')
+        else:
+            time_frame = request_body[0]['timeFrame']
+        print(time_frame)
         counties = request_body[0]['county']
         account_type_list = request_body[0]['accountType']
     except Exception as e:

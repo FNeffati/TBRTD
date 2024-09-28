@@ -12,38 +12,57 @@ const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
     const [searchTerm, setSearchTerm] = useState(''); // Search term state
     const [filteredData, setFilteredData] = useState(); // State to hold filtered data
 
+    // Cache to store fetched data
+    const cache = useRef({});
+
+    /**
+     * Generates a unique cache key based on account types and retweet filter.
+     * @returns {string} The generated cache key.
+     */
+    const generateCacheKey = () => {
+        return JSON.stringify({ account_types, retweetFilter });
+    };
+
     const fetchTweets = useCallback(() => {
         const withRetweets = retweetFilter === 'With Retweets';
-
         const filters = [
             {
-                "timeFrame": "", // all counties 
-                "county": [], // all time 
+                "timeFrame": "", // all time 
+                "county": [], //all counties 
                 "accountType": account_types.length ? account_types : ["Academic", "Government", "Media", "Other", "Tourism"] // Fetch all if empty
             },
             {
                 "retweets": withRetweets
             }
         ];
-    
-        fetch('/get_tweets', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(filters)
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setData(data);
+
+        const cacheKey = generateCacheKey();
+
+        // Check if the data is already in cache
+        if (cache.current[cacheKey]) {
+            setData(cache.current[cacheKey]);
+        } else {
+            fetch('/get_tweets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(filters)
             })
-            .catch((error) => console.error(error));
+                .then((response) => response.json())
+                .then((data) => {
+                    setData(data);
+                    // Store the data in cache
+                    cache.current[cacheKey] = data;
+                })
+                .catch((error) => console.error(error));
+        }
     }, [account_types, retweetFilter]);
-    
-    // Fetch tweets on component mount and when account types change
+
+    // Fetch tweets on component mount and when account types or retweet filter change
     useEffect(() => {
         fetchTweets();
-    }, [fetchTweets]); 
+    }, [fetchTweets]);
 
     // Function to escape special characters in the search term
     function escapeRegExp(string) {
@@ -62,7 +81,7 @@ const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
                 setFilteredData(data); // If no search term, show all data
             }
         } else {
-            console.log('Data not yet available'); 
+            console.log('Data not yet available');
         }
     }, [data, searchTerm]);
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "../styling/Twitter.css";
 import defaultAvatar from '../assets/avatar.jpg';
 import DOMPurify from 'dompurify';
@@ -18,6 +18,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     const [searchTerm2, setSearchTerm2] = useState('');
     const [filterMode, setFilterMode] = useState('Exact Phrase');
     const [sortOrder, setSortOrder] = useState("Most Recent");
+
+    // Cache to store fetched data
+    const cache = useRef(new Map());
 
     /**
      * Formats the date object to a readable string.
@@ -70,28 +73,50 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
     };
 
     /**
+     * Generates a cache key based on the selected filters.
+     *
+     * @param {Object} filters - The selected filters.
+     * @returns {string} The generated cache key.
+     */
+    const generateCacheKey = (filters) => {
+        return JSON.stringify(filters);
+    };
+
+    /**
      * Fetches tweets from the server based on selected filters and retweets setting.
      */
     const fetchTweets = () => {
         const containsRetweets = selectedFilters.retweetFilter[0] === "With Retweets"; 
-    
-        fetch('/get_tweets', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify([selectedFilters, { "retweets": containsRetweets }])
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            const sortedData = sortTweets(data);
-            setTweets(sortedData);
-            onTweetsFetched(sortedData);
+        const cacheKey = generateCacheKey({ ...selectedFilters, retweets: containsRetweets });
+
+        // Check if data is in cache
+        if (cache.current.has(cacheKey)) {
+            // Use cached data
+            const cachedData = cache.current.get(cacheKey);
+            setTweets(cachedData);
+            onTweetsFetched(cachedData);
             setCurrentPage(1);
-        })
-        .catch((error) => console.error("Error fetching tweets:", error));
+        } else {
+            // Fetch new data if not in cache
+            fetch('/get_tweets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([selectedFilters, { "retweets": containsRetweets }])
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                const sortedData = sortTweets(data);
+                setTweets(sortedData);
+                onTweetsFetched(sortedData);
+                setCurrentPage(1);
+                // Store data in cache
+                cache.current.set(cacheKey, sortedData);
+            })
+            .catch((error) => console.error("Error fetching tweets:", error));
+        }
     };
-    
 
     useEffect(() => {
         fetchTweets();

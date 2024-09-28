@@ -1,0 +1,27 @@
+.time_search_bar_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    padding: 5px;
+}
+
+.time_tweet_search_bar {
+    flex-grow: 1;
+    margin-right: 5px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 450px;
+    margin-left: 40px;
+    margin-bottom: 5px;
+}
+
+.time_clear_button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-bottom: 5px;
+}

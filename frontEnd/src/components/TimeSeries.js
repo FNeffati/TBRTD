@@ -9,6 +9,7 @@ import "../styling/TimeSeries.css";
 const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
     const graphRef = useRef(null);
     const [data, setData] = useState();
+    const [inputValue, setInputValue] = useState(''); // State for input field value
     const [searchTerm, setSearchTerm] = useState(''); // Search term state
     const [filteredData, setFilteredData] = useState(); // State to hold filtered data
 
@@ -139,21 +140,33 @@ const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
         }
     }, [filteredData]);
 
+    // Function to handle key down event on the search bar
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            setSearchTerm(inputValue); // Update the search term state when Enter key is pressed
+        }
+    };
+
+    // Function to clear the search term and input field
+    const handleClearSearch = () => {
+        setInputValue(''); // Clear the input field
+        setSearchTerm(''); // Clear the search term state to reset to full data
+    };
+
     return (
         <div>
-            <div className="search_bar_container">
+            <div className="time_search_bar_container">
                 <input
-                    className="tweet_search_bar"
+                    className="time_tweet_search_bar"
                     type="text"
-                    placeholder="Filter tweets by words"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Use 'Enter' to search a word or phrase. Press clear to reset."
+                    value={inputValue} // Controlled component for input
+                    onChange={(e) => setInputValue(e.target.value)} // Update input value state
+                    onKeyDown={handleKeyDown} // Trigger search on Enter key press
                 />
-                {searchTerm && (
-                    <button className="clear_button" onClick={() => setSearchTerm('')}>
-                        Clear
-                    </button>
-                )}
+                <button className="time_clear_button" onClick={handleClearSearch}>
+                    Clear
+                </button>
             </div>
             <div ref={graphRef} style={{ width: '100%', height: '100%' }}></div>
         </div>

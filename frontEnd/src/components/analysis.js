@@ -339,7 +339,6 @@ class Util {
         const stopWordsSet = new Set(Util.stopWords);
         const locationsSet = new Set(Util.locations);
     
-        // Combine replace operations and flatten text in one go
         const flattenedText = tweets.map(item => item.text)
             .join(' ')
             .toLowerCase()
@@ -370,7 +369,6 @@ class Util {
         // Convert locations into a Set for faster lookups
         const locationsSet = new Set(Util.locations);
 
-        // Combine replace operations and flatten text into a single pass
         const flattenedText = tweets.map(item => item.text)
             .join(' ')
             .toLowerCase()
@@ -395,11 +393,10 @@ class Util {
         const urlRegex = /https?:\/\/\S+/g;
         const punctuationPattern = /[^\w\s#]|_/g;
     
-        // Convert stop words and locations into Sets for O(1) lookups
+        // Convert stop words and locations into Sets 
         const stopWordsSet = new Set(Util.stopWords);
         const locationsSet = new Set(Util.locations);
     
-        // Combine replace operations and flatten text in one go
         const flattenedText = tweets.map(item => item.text)
             .join(' ')
             .toLowerCase()
@@ -442,7 +439,6 @@ class Util {
     
             let text = tweet.text || '';
     
-            // Combine all replace operations into a single pass
             text = text
                 .replace(RTPattern, '')
                 .replace(usernamePattern, '')
@@ -495,7 +491,6 @@ class Util {
     
             let text = tweet.text || '';
             
-            // Combine replacements into one pass
             text = text
                 .replace(RTPattern, '')
                 .replace(usernamePattern, '')

@@ -263,7 +263,7 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                             <input
                                 className="tweet_search_bar"
                                 type="text"
-                                placeholder="Filter tweets"
+                                placeholder="Begin typing to filter tweet results."
                                 value={searchTerm1}
                                 onChange={(e) => setSearchTerm1(e.target.value)}
                             />
@@ -347,6 +347,23 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                     </div>
                 </div>
             </div>
+            <div className="pagination">
+                <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage <= 1}>
+                    Previous
+                </button>
+                <span>Page {currentPage} of {totalPages}</span>
+                <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage >= totalPages}>
+                    Next
+                </button>
+                <input
+                    type="number"
+                    value={currentPage}
+                    onChange={handlePageChange}
+                    onBlur={handleBlur}
+                    min="1"
+                    max={totalPages}
+                />
+            </div>
             <div className="tweets_container">
                 <ul>
                     {Array.isArray(currentTweets) && currentTweets.length > 0 ? (
@@ -395,14 +412,6 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                 <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage >= totalPages}>
                     Next
                 </button>
-                <input
-                    type="number"
-                    value={currentPage}
-                    onChange={handlePageChange}
-                    onBlur={handleBlur}
-                    min="1"
-                    max={totalPages}
-                />
             </div>
         </div>
     );

@@ -42,6 +42,11 @@ function MainApp() {
         }));
     };
 
+    // Set retweet filter on initial fetch. Ensuring it caches
+    useEffect(() => {
+        handleFilterChange('retweetFilter', "Without Retweets");  // Explicitly set "Without Retweets" as default
+    }, []);
+
     /*
     * Function to handle changes in the time frame
     * @param {string} start - the start date of the time frame
@@ -123,7 +128,6 @@ function MainApp() {
                 onChange={(selectedOptions) => handleFilterChange('retweetFilter', selectedOptions[0])}
                 isMultiChoice={false} 
                 changeTitleOnSelect={true}
-                defaultSelected={[selectedFilters.retweetFilter]} 
             />
         </div>
     );

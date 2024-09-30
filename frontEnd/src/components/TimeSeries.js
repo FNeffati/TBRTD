@@ -135,7 +135,8 @@ const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
                 width: 750,
                 height: 550,
                 pixelsPerLabel: 40,
-                colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+                colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'],
+                dateWindow: [new Date(2018, 1, 0), new Date()] // Set time frame from beginning to present
             });
         }
     }, [filteredData]);

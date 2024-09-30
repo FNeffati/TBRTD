@@ -200,7 +200,7 @@ class Util {
         'gillum', 'kriseman', 'richard kriseman', 'ken welch', 'george cretekos', 'cretekos', 'buckhorn', 'bob buckhorn',
         'jane castor', 'janecastor', 'castor', 'john holic', 'john holic', 'holic', 'ron feinsod', 'twitter', 'status', 'rickscott', 'rick',
         'redtiderick', 'redtideron', 'removeron', 'trumpmaga', 'gillumforgovernor', 'deathdesantis', 'maga', 'qanon', 'rondeathsantis', 
-        'trumptampa', 'rondesantes', 'demvoice1', 'notscott',
+        'trumptampa', 'rondesantes', 'demvoice1', 'notscott', 'arresttrumpnow', 'justiceforcamerinherrin',
 
         "x", "a", "a's", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", "again", "against", "ain't", "all", "almost",
         "alone", "along", "already", "also", "although", "always", "am", "among", "amongst", "an", "and", "another", "any", "anybody",
@@ -381,7 +381,7 @@ class Util {
         // Use a map to count valid location hashtags
         const validHashtags = words.filter(word => word.startsWith('#') && locationsSet.has(word.substring(1)));
 
-        return Util.countWords(validHashtags.map(word => word.substring(1)));
+        return Util.countWords(validHashtags.map(word => word)); // return the whole word including '#'
     }
 
     /**
@@ -415,7 +415,7 @@ class Util {
                 return !locationsSet.has(hashtag) && !stopWordsSet.has(hashtag);
             }
             return false;
-        }).map(word => word.substring(1)); // Remove the '#' for counting
+        }).map(word => word); // return the whole word including '#'
     
         return Util.countWords(validHashtags);
     }

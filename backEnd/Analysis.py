@@ -41,10 +41,10 @@ class Analysis:
                 else:
                     query = {}
             if len(time_frame) == 2:
-                start_date_str, end_date_str = time_frame  # Directly use the list elements
+                start_date_str, end_date_str = time_frame
                 start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
                 end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
-                query['time'] = {'$gte': start_date, '$lte': end_date}  # Use $lte for inclusive end date
+                query['time'] = {'$gte': start_date, '$lte': end_date}
 
             if counties:
                 query["location"] = {"$in": counties}

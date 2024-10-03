@@ -10,6 +10,7 @@
     list-style: none;
     padding: 10px;
     margin-right: 10px;
+    margin-left: 20px;
 }
 
 .tweet {
@@ -51,10 +52,14 @@
     margin-top: 5px;
 }
 .clear_button {
-    transform: translateX(-100%);
-    background-color: transparent;
+    background-color: #e74c3c;
+    color: white;
     border: none;
+    padding: 8px;
     cursor: pointer;
+    border-radius: 2px;
+    margin-bottom: 5px;
+    margin-left: 5px;
 }
 /* Tweet Styles */
 .profile_image {

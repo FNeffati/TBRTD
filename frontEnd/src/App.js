@@ -149,11 +149,11 @@ function MainApp() {
                     </>
                 ) : (
                     <>
-                        <TimeFrameSelector onTimeFrameChange={handleTimeFrameChange} />
-                        <Filters options={Word_Cloud_Options} Title={"WORD CLOUD"} information={"<ul><li><strong>Default:</strong> Non Geo Hashtags Selected</li><li><strong>Functionality:</strong> Click an option to see the counts of hashtags under that category.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('wordCloud', selectedOptions)} isMultiChoice={false} changeTitleOnSelect={true} />
-                        <Filters options={County_Options} Title={"COUNTY"} information={"<ul><li><strong>Default:</strong> All counties selected.</li><li><strong>Functionality:</strong> Upon hovering a county, the Map will display how many tweets are about that county.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('county', selectedOptions)} changeTitleOnSelect={true} />
-                        <Filters options={Account_Type_Options} Title={"ACCOUNT TYPE"} information={"<ul><li><strong>Default:</strong> All Accounts are selected</li><li><strong>Functionality:</strong> Click an option to see tweets from accounts under that category.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('accountType', selectedOptions)} changeTitleOnSelect={true} />
-                        <Filters options={Tweet_Filter_Options} Title={selectedFilters.retweetFilter} information={"<ul><li><strong>Default:</strong> Without Retweets</li><li><strong>Functionality:</strong> Select to include or exclude retweets in the displayed tweets.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('retweetFilter', selectedOptions)} isMultiChoice={false} changeTitleOnSelect={true} />
+                        <TimeFrameSelector informationTitle='Time Frame ' onTimeFrameChange={handleTimeFrameChange} />
+                        <Filters options={Word_Cloud_Options} Title={"WORD CLOUD"} informationTitle='Word Cloud Type ' information={"<ul><li><strong>Default:</strong> Non Geo Hashtags Selected</li><li><strong>Functionality:</strong> Click an option to see the counts of hashtags under that category.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('wordCloud', selectedOptions)} isMultiChoice={false} changeTitleOnSelect={true} />
+                        <Filters options={County_Options} informationTitle='Included Counties ' Title={"COUNTY"} information={"<ul><li><strong>Default:</strong> All counties selected.</li><li><strong>Functionality:</strong> Upon hovering a county, the Map will display how many tweets are about that county.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('county', selectedOptions)} changeTitleOnSelect={true} />
+                        <Filters options={Account_Type_Options} informationTitle='Account Types ' Title={"ACCOUNT TYPE"} information={"<ul><li><strong>Default:</strong> All Accounts are selected</li><li><strong>Functionality:</strong> Click an option to see tweets from accounts under that category.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('accountType', selectedOptions)} changeTitleOnSelect={true} />
+                        <Filters options={Tweet_Filter_Options} informationTitle='Retweet Filter ' Title={selectedFilters.retweetFilter} information={"<ul><li><strong>Default:</strong> Without Retweets</li><li><strong>Functionality:</strong> Select to include or exclude retweets in the displayed tweets.</li></ul>"} onChange={(selectedOptions) => handleFilterChange('retweetFilter', selectedOptions)} isMultiChoice={false} changeTitleOnSelect={true} />
                     </>
                 )}
             </div>
@@ -161,12 +161,12 @@ function MainApp() {
                 <div className="Twitter_container">
                     <ContentHeader
                         title="Tweet Display"
-                        content="Shows individual tweets related to red tide in the Tampa Bay area. Includes tweet content, date, location, and engagement metrics."
+                        content="Shows individual tweets related to red tide in the Tampa Bay area. Includes tweet content, date, location, and engagement metrics. Affected by all filters. "
                     />
                     <Twitter selectedFilters={selectedFilters} onTweetsFetched={handleTweets} clickedWord={clickedWord}/>
                 </div>
                 <div className="Word_Cloud_container">
-                    <ContentHeader title={"Word Cloud"} content={"Click on a word to see the tweets that contain it. Clicking a word will override your current search term."} />
+                    <ContentHeader title={"Word Cloud"} content={"Click on a word to see the tweets that contain it. Clicking a word will override your current search term. Affected by all filters. "} />
                     <WordCloud cloud_type={selectedFilters.wordCloud} tweets={tweets} onWordCloudClick={handleWordClick}/>
                 </div>
                 <div className="Map_container">

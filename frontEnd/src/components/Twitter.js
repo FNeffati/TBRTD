@@ -267,11 +267,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                 value={searchTerm1}
                                 onChange={(e) => setSearchTerm1(e.target.value)}
                             />
-                            {searchTerm1 && (
                                 <button className="clear_button" onClick={() => setSearchTerm1('')}>
                                     Clear
                                 </button>
-                            )}
                         </div>
                     )}
                     {filterMode === 'Contains Either'  && (
@@ -283,11 +281,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                 value={searchTerm1}
                                 onChange={(e) => setSearchTerm1(e.target.value)}
                             />
-                            {searchTerm1 && (
                                 <button className="clear_button" onClick={() => setSearchTerm1('')}>
                                     Clear
                                 </button>
-                            )}
                             <input
                                 className="tweet_search_bar"
                                 type="text"
@@ -295,11 +291,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                 value={searchTerm2}
                                 onChange={(e) => setSearchTerm2(e.target.value)}
                             />
-                            {searchTerm2 && (
                                 <button className="clear_button" onClick={() => setSearchTerm2('')}>
                                     Clear
                                 </button>
-                            )}
                         </div>
                     )}
                     {filterMode === 'Contains Both'  && (
@@ -311,11 +305,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                 value={searchTerm1}
                                 onChange={(e) => setSearchTerm1(e.target.value)}
                             />
-                            {searchTerm1 && (
                                 <button className="clear_button" onClick={() => setSearchTerm1('')}>
                                     Clear
                                 </button>
-                            )}
                             <input
                                 className="tweet_search_bar"
                                 type="text"
@@ -323,11 +315,9 @@ function Twitter({ selectedFilters, onTweetsFetched, clickedWord }) {
                                 value={searchTerm2}
                                 onChange={(e) => setSearchTerm2(e.target.value)}
                             />
-                            {searchTerm2 && (
                                 <button className="clear_button" onClick={() => setSearchTerm2('')}>
                                     Clear
                                 </button>
-                            )}
                         </div>
                     )}
                     <div className="dropdown_menu">

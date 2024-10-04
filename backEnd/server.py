@@ -67,7 +67,7 @@ def get_tweets():
             time_frame = time_frame_str.split(' ')
         else:
             time_frame = request_body[0]['timeFrame']
-        print(time_frame)
+        #print(time_frame)
         counties = request_body[0]['county']
         account_type_list = request_body[0]['accountType']
     except Exception as e:
@@ -98,7 +98,8 @@ def get_counts():
     account_type_list = request_body.get("account_types", [])
     included_retweets = request_body.get("retweets", False)
 
-    time_frame = date.split(' ') if ' ' in date else [date]
+    time_frame = date.split(' ') if ' ' in date else date[0].split(' ')
+    print(time_frame)
 
     try:
         tweets = analysis.get_filtered_tweets(time_frame, None, account_type_list, included_retweets)

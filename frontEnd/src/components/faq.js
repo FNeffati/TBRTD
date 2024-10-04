@@ -72,20 +72,30 @@ const FAQ = () => {
                     </p>
                     <ul>
                         <li>
-                            <strong>Geo Hashtags:</strong> Hashtags that have to do with geographical areas (e.g.
-                            #Tampa, #SiestaKey, etc)
+                            <strong>Non Geo Single Terms:</strong> All the terms (not just the hashtags) that have
+                            to do with anything but the geographical areas
+                        </li>
+                        <li>
+                            <strong>Non Geo Single User:</strong> Most commonly occouring word by user for non geo terms. This ignores 
+                            duplicate occourances, representing the number of unique users mentioning the term.
+                            Useful for filtering out spam and frequent occourences of the term from the same users.
                         </li>
                         <li>
                             <strong>Non Geo Hashtags:</strong> Hashtags that have to do with anything but the
-                            geographical areas (e.g. #deadfish, #manatees).
+                                geographical areas (e.g. #deadfish, #manatees).
                         </li>
                         <li>
                             <strong>Geo Single Terms:</strong> All the terms (not just the hashtags) that have to do
                             with geographical areas
                         </li>
                         <li>
-                            <strong>Non Geo Single Terms:</strong> All the terms (not just the hashtags) that have
-                            to do with anything but the geographical areas
+                            <strong>Geo Single User:</strong> Most commonly occouring word by user for geo terms. This ignores 
+                            duplicate occourances, representing the number of unique users mentioning the term. 
+                            Useful for filtering out spam and frequent occourences of the term from the same users.
+                        </li>
+                        <li>
+                            <strong>Geo Hashtags:</strong> Hashtags that have to do with geographical areas (e.g.
+                            #Tampa, #SiestaKey, etc)
                         </li>
                     </ul>
                     <p>
@@ -157,11 +167,13 @@ const FAQ = () => {
                         </p>
                     </div>
                     <p>
-                        There are two types of word clouds presented in this dashboard: <strong>Single User Word Clouds</strong> and 
-                        <strong>Single Term Word Clouds</strong>. The Single User Word Clouds show counts that reflect 
-                        how many individual users have tweeted a specific word, ignoring duplicates. This helps reduce 
-                        the impact of spam and frequent retweeting of the same term. Single Term Word Clouds, on the 
-                        other hand, show the frequency of all terms in a given category, not limited to hashtags.
+                            There are <strong>three types of word clouds</strong> presented in this dashboard: 
+                            <strong>    Single Term</strong>, <strong>Single User</strong> and <strong>Hashtag Word Clouds</strong>. 
+                            The Single Term Word Clouds reflect how frequently a term (either a hashtag or a regular word) 
+                            has been mentioned. The Single User Word Clouds reflect how many individual users mentioned that term, 
+                            helping reduce the impact of spam and frequent retweeting of the term by same users.
+                            The Hashtag Word Cloud reflects how frequently a hashtag has been mentioned,
+                            disregarding any non-hashtag terms.
                     </p>
                 </section>
 

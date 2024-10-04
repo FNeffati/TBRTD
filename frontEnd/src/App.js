@@ -161,16 +161,16 @@ function MainApp() {
                 <div className="Twitter_container">
                     <ContentHeader
                         title="Tweet Display"
-                        content="Shows individual tweets related to red tide in the Tampa Bay area. Includes tweet content, date, location, and engagement metrics. Affected by all filters. "
+                        content="Shows individual tweets related to red tide in the Tampa Bay area. Includes tweet content, date, location, and engagement metrics."
+                        filters={"Affected by all filters."}
                     />
                     <Twitter selectedFilters={selectedFilters} onTweetsFetched={handleTweets} clickedWord={clickedWord}/>
                 </div>
                 <div className="Word_Cloud_container">
-                    <ContentHeader title={"Word Cloud"} content={"Click on a word to see the tweets that contain it. Clicking a word will override your current search term. Affected by all filters. "} />
+                    <ContentHeader title={"Word Cloud"} content={"Click on a word to see the tweets that contain it. Clicking a word will override your current search term."} filters={"Affected by all filters."} />
                     <WordCloud cloud_type={selectedFilters.wordCloud} tweets={tweets} onWordCloudClick={handleWordClick}/>
                 </div>
                 <div className="Map_container">
-                    <ContentHeader title={"Map / Time Series"} content={"Explore the data with visual representations of county of origin (Map) and tweets over time (Time-Series)."}/>
                     <GallerySwitch account_types={selectedFilters.accountType} date={selectedFilters.timeFrame} retweetFilter={selectedFilters.retweetFilter[0]} />
                 </div>
             </div>

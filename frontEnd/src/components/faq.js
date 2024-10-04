@@ -138,8 +138,7 @@ const FAQ = () => {
                         <img src={require('../assets/scroller.png')} style={{width:"35%", alignSelf:'flex-end'}} alt={'Tweet Scroller'}/>
                     </div>
                     <p>
-                        Only ten tweets are displayed at a time and the button on the bottom of the scroller can
-                        be used to cycle through the tweets by advancing ten tweets at a time or by jumping to a
+                        The buttons on the top and bottom of the scroller can be used to cycle through the tweets or by jumping to a
                         selected page.
                     </p>
                 </section>

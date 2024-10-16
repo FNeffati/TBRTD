@@ -33,11 +33,11 @@ const FAQ = () => {
                     </p>
                     <p>
                         Users can filter the tweets to evaluate those of interest, including filters by date,
-                        account type, word cloud terms, and county. By default, all tweets in the database are
-                        shown and the filters that include a categorical description (account type, word cloud,
-                        county) will not show a checkmark by each category indicating all are selected by default.
-                        Further filtering by categories will show a check mark for one to any of the categories.
-                        Removing all checkmarks for a filter will default back to all.
+                        word cloud terms, county, account type, and retweets. By default, only original tweets 
+						(no retweets) in the database are shown and the filters that include a categorical description 
+						(word cloud, county, account type, retweets) will not show a checkmark by each category 
+						indicating all are selected by default. Further filtering by categories will show a check mark 
+						for one to any of the categories. Removing all checkmarks for a filter will default back to all.
                     </p>
                     <p>
                         The date range filter will select all tweets within the start and end date selected.
@@ -56,12 +56,6 @@ const FAQ = () => {
                 <section>
                     <h2>Tweet Filters</h2>
                     <p>
-                        The account type filter will select tweets for accounts assigned to one of five different
-                        categories: academic, government, media, tourism, and other. Please see <a href={'https://journals.flvc.org/FLAIRS/article/view/135551'} target="_blank">this paper</a> for
-                        additional information on how account types were assigned to each Twitter/X account in the
-                        database.
-                    </p>
-                    <p>
                         The word cloud filter can be used to display commonly used terms in the tweets. The
                         filters distinguish terms that are hashtags or not and if the originating tweet was
                         geographically referenced. Hashtags are terms used to index or reference particular topics
@@ -70,7 +64,7 @@ const FAQ = () => {
                         were assigned to counties based on contextual information in the tweet. The terms are
                         grouped in the following categories:
                     </p>
-                    <ul>
+					<ul>
                         <li>
                             <strong>Geo Hashtags:</strong> Hashtags that have to do with geographical areas (e.g.
                             #Tampa, #SiestaKey, etc)
@@ -88,11 +82,21 @@ const FAQ = () => {
                             to do with anything but the geographical areas
                         </li>
                     </ul>
-                    <p>
-                        Finally, the geographical areas mentioned in tweets can be using the county filter for any
+					<p>
+                        The geographical areas mentioned in tweets can be using the county filter for any
                         of the five counties mentioned above. NOTE: Those indicate that the tweets were about the
                         county, not that they came from that county.
                     </p>
+					<p>
+                        The account type filter will select tweets for accounts assigned to one of five different
+                        categories: academic, government, media, tourism, and other. Please see <a href={'https://journals.flvc.org/FLAIRS/article/view/135551'} target="_blank">this paper</a> for
+                        additional information on how account types were assigned to each Twitter/X account in the
+                        database.
+                    </p>
+					<p>
+						Finally, the retweet filter will select original tweets or original tweets with retweets. 
+						By default, only original tweets are shown.
+					</p>
                 </section>
 
                 <section>
@@ -116,7 +120,7 @@ const FAQ = () => {
                                 </li>
                                 <li>
                                     The tweets in the scroller can also be filtered to include both original tweets and
-                                    retweets or only original tweets using the middle drop-down menu. A retweet is when a
+                                    retweets or only original tweets using the top drop-down menu. A retweet is when a
                                     Twitter/X user “reposts” an original tweet from another user. Selecting only original
                                     tweets will reduce the total number of tweets in the scroller.
                                 </li>
@@ -124,7 +128,7 @@ const FAQ = () => {
                                     Finally, the order of the tweets can be changed using the right drop-down menu. By
                                     default, the tweet scroller is arranged with date descending, where the most recent
                                     tweet is shown first. This option can be changed to show date ascending or to order the
-                                    tweets by most liked.
+                                    tweets by most liked, most retweeted, or most replies.
                                 </li>
                             </ul>
 
@@ -152,6 +156,17 @@ const FAQ = () => {
                             This will autofill the text filter in the tweet scroller with the selected word.
                         </p>
                     </div>
+					<p>
+					There are <b>three types of word clouds</b> presented in this dashboard: <b>Single Term</b>, 
+					<b>Single User</b>, and <b>Hashtag</b> Word Clouds. Each of these types can also be filtered 
+					by non geo or geo-tagged tweets that do not or do include an explicit geographic location, 
+					respectively.  Non geo-tagged tweets are assigned a location based on tweet content, rather 
+					than an explicit tag.  The Single Term Word Clouds reflect how frequently a term (either 
+					a hashtag or a regular word) has been mentioned. The Single User Word Clouds reflect how many 
+					individual users mentioned that term, helping reduce the impact of spam and frequent retweeting 
+					of the term by same users. The Hashtag Word Cloud reflects how frequently a hashtag has been 
+					mentioned, disregarding any non-hashtag terms.
+					</p>
                 </section>
 
                 <section>
@@ -178,7 +193,9 @@ const FAQ = () => {
                             The plot can also be zoomed by holding the left mouse button and dragging to a time period
                             or tweet volume range of interest. Double-clicking the map will reset the view. Note the
                             clear increase in tweet activity corresponding to peak red tides during 2018 and 2021.
-                            Evaluating volume by county can also suggest spatial changes in bloom impacts over time.
+							The time series plot can also be filtered to include tweets with specific words or
+							phrases from the text entry box above the plot. Evaluating volume by county can also 
+							suggest spatial changes in bloom impacts over time.
                         </p>
                     </div>
                 </section>

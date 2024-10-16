@@ -6,42 +6,64 @@ import "../styling/TimeSeries.css";
  * TwitterTimeSeries component renders a time series graph of tweet counts per county using Dygraphs.
  * Dygraphs package link: https://www.npmjs.com/package/dygraphs
  */
-const TwitterTimeSeries = ({ account_types }) => {
+const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
     const graphRef = useRef(null);
     const [data, setData] = useState();
+    const [inputValue, setInputValue] = useState(''); // State for input field value
     const [searchTerm, setSearchTerm] = useState(''); // Search term state
     const [filteredData, setFilteredData] = useState(); // State to hold filtered data
 
+    // Cache to store fetched data
+    const cache = useRef({});
+
+    /**
+     * Generates a unique cache key based on account types and retweet filter.
+     * @returns {string} The generated cache key.
+     */
+    const generateCacheKey = () => {
+        return JSON.stringify({ account_types, retweetFilter });
+    };
+
     const fetchTweets = useCallback(() => {
+        const withRetweets = retweetFilter === 'With Retweets';
         const filters = [
             {
-                "timeFrame": "", // all counties 
-                "county": [], // all time 
+                "timeFrame": "", // all time 
+                "county": [], //all counties 
                 "accountType": account_types.length ? account_types : ["Academic", "Government", "Media", "Other", "Tourism"] // Fetch all if empty
             },
             {
-                "retweets": true // with retweets for now 
+                "retweets": withRetweets
             }
         ];
-    
-        fetch('/get_tweets', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(filters)
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                setData(data);
+
+        const cacheKey = generateCacheKey();
+
+        // Check if the data is already in cache
+        if (cache.current[cacheKey]) {
+            setData(cache.current[cacheKey]);
+        } else {
+            fetch('/get_tweets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(filters)
             })
-            .catch((error) => console.error(error));
-    }, [account_types]);
-    
-    // Fetch tweets on component mount and when account types change
+                .then((response) => response.json())
+                .then((data) => {
+                    setData(data);
+                    // Store the data in cache
+                    cache.current[cacheKey] = data;
+                })
+                .catch((error) => console.error(error));
+        }
+    }, [account_types, retweetFilter]);
+
+    // Fetch tweets on component mount and when account types or retweet filter change
     useEffect(() => {
         fetchTweets();
-    }, [fetchTweets]); 
+    }, [fetchTweets]);
 
     // Function to escape special characters in the search term
     function escapeRegExp(string) {
@@ -60,7 +82,7 @@ const TwitterTimeSeries = ({ account_types }) => {
                 setFilteredData(data); // If no search term, show all data
             }
         } else {
-            console.error('Data not available to filter');
+            console.log('Data not yet available');
         }
     }, [data, searchTerm]);
 
@@ -113,26 +135,38 @@ const TwitterTimeSeries = ({ account_types }) => {
                 width: 750,
                 height: 550,
                 pixelsPerLabel: 40,
-                colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd']
+                colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'],
             });
         }
     }, [filteredData]);
 
+    // Function to handle key down event on the search bar
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter') {
+            setSearchTerm(inputValue); // Update the search term state when Enter key is pressed
+        }
+    };
+
+    // Function to clear the search term and input field
+    const handleClearSearch = () => {
+        setInputValue(''); // Clear the input field
+        setSearchTerm(''); // Clear the search term state to reset to full data
+    };
+
     return (
         <div>
-            <div className="search_bar_container">
+            <div className="time_search_bar_container">
                 <input
-                    className="tweet_search_bar"
+                    className="time_tweet_search_bar"
                     type="text"
-                    placeholder="Filter tweets by words"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Use 'Enter' to search a word or phrase. Press clear to reset."
+                    value={inputValue} // Controlled component for input
+                    onChange={(e) => setInputValue(e.target.value)} // Update input value state
+                    onKeyDown={handleKeyDown} // Trigger search on Enter key press
                 />
-                {searchTerm && (
-                    <button className="clear_button" onClick={() => setSearchTerm('')}>
-                        Clear
-                    </button>
-                )}
+                <button className="time_clear_button" onClick={handleClearSearch}>
+                    Clear
+                </button>
             </div>
             <div ref={graphRef} style={{ width: '100%', height: '100%' }}></div>
         </div>

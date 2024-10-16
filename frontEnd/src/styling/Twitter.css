@@ -10,6 +10,7 @@
     list-style: none;
     padding: 10px;
     margin-right: 10px;
+    margin-left: 20px;
 }
 
 .tweet {
@@ -51,10 +52,14 @@
     margin-top: 5px;
 }
 .clear_button {
-    transform: translateX(-100%);
-    background-color: transparent;
+    background-color: #e74c3c;
+    color: white;
     border: none;
+    padding: 8px;
     cursor: pointer;
+    border-radius: 2px;
+    margin-bottom: 5px;
+    margin-left: 5px;
 }
 /* Tweet Styles */
 .profile_image {
@@ -91,7 +96,7 @@
 
 .tweets_container {
     max-width: 500px;
-    max-height: 600px; /* Adjust the height as needed */
+    max-height: 1050px; 
     overflow-y: auto;
 }
 
@@ -100,6 +105,7 @@
     justify-content: center;
     align-items: center;
     margin-top: 20px;
+    margin-right: 50px;
 }
 
 .pagination button {

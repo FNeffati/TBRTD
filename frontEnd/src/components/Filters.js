@@ -12,8 +12,9 @@ import InformationTip from "./InformationTip";
  * @param {Function} props.onChange - Callback function to handle option changes.
  * @param {boolean} [props.isMultiChoice=true] - Flag to allow multiple selections.
  * @param {boolean} [props.changeTitleOnSelect=false] - Flag to change the title based on selected options.
+ * @param {string} [props.informationTitle] - The title of the information tip.
  */
-const Filters = ({ options, Title, information, onChange, isMultiChoice = true, changeTitleOnSelect = false }) => {
+const Filters = ({ options, Title, information, onChange, isMultiChoice = true, changeTitleOnSelect = false, informationTitle }) => {
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [isOpen, setIsOpen] = useState(false);
     const [currentTitle, setCurrentTitle] = useState(Title);
@@ -82,7 +83,7 @@ const Filters = ({ options, Title, information, onChange, isMultiChoice = true, 
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
-            <InformationTip information={information} />
+            <InformationTip title={informationTitle} information={information}/>
 
             <div className="dropdown-header">{currentTitle} ▼</div>
             {isOpen && (

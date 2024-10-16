@@ -53,14 +53,21 @@ def get_tweets():
         Response: JSON object containing the filtered tweets.
     """
     request_body = request.get_json()
-    retweets = True
+    retweets = False
     time_frame = None
     counties = None
     account_type_list = None
 
     try:
         retweets = request_body[1]['retweets']
-        time_frame = request_body[0]['timeFrame'].split(' ')
+        # Check if timeFrame is a list containing a single string
+        if isinstance(request_body[0]['timeFrame'], list) and len(request_body[0]['timeFrame']) == 1:
+            # Split the single string into start_date and end_date
+            time_frame_str = request_body[0]['timeFrame'][0]
+            time_frame = time_frame_str.split(' ')
+        else:
+            time_frame = request_body[0]['timeFrame']
+        #print(time_frame)
         counties = request_body[0]['county']
         account_type_list = request_body[0]['accountType']
     except Exception as e:
@@ -76,35 +83,39 @@ def get_counts():
     Get the count of tweets per county based on the request parameters.
 
     The request body should contain JSON data with the following structure:
-    [
-        "start_date end_date",
-        ["list_of_account_types"]
-    ]
+    {
+        "date": "YYYY-MM-DD",   # Assuming 'date' parameter is a single date or range
+        "account_types": ["list_of_account_types"],
+        "retweets": true_or_false  # Include retweets or not
+    }
 
     Returns:
         Response: JSON object containing the count of tweets per county.
     """
     request_body = request.get_json()
 
-    time_frame = None
-    counties = None
-    account_type_list = None
+    date = request_body.get("date", "")
+    account_type_list = request_body.get("account_types", [])
+    included_retweets = request_body.get("retweets", False)
+
+    time_frame = date.split(' ') if ' ' in date else date[0].split(' ')
+    print(time_frame)
 
     try:
-        time_frame = request_body[0].split(' ')
-        counties = None
-        account_type_list = request_body[1]
-    except Exception as E:
-        print(E, "Something went wrong with extracting time frame or account type")
+        tweets = analysis.get_filtered_tweets(time_frame, None, account_type_list, included_retweets)
+        tweets = json.loads(tweets)
+        county_tweet_counts = defaultdict(int)
 
-    tweets = analysis.get_filtered_tweets(time_frame, counties, account_type_list)
-    tweets = json.loads(tweets)
-    county_tweet_counts = defaultdict(int)
-    for tweet in tweets:
-        county = tweet["location"]
-        county_tweet_counts[county] += 1
+        for tweet in tweets:
+            county = tweet.get("location")
+            if county:
+                county_tweet_counts[county] += 1
 
-    return jsonify({"counts": county_tweet_counts})
+        return jsonify({"counts": county_tweet_counts})
+
+    except Exception as e:
+        print(f"Error fetching tweet counts: {e}")
+        return jsonify({"counts": {}})
 
 
 if __name__ == "__main__":

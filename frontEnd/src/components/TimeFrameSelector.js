@@ -8,8 +8,9 @@ import { preventDefault } from "leaflet/src/dom/DomEvent";
  *
  * @param {Object} props - The properties passed to the component.
  * @param {Function} props.onTimeFrameChange - Callback function to handle changes in the selected time frame.
+ * @param {string} [props.informationTitle] - The title of the information tip.
  */
-function TimeFrameSelector({ onTimeFrameChange }) {
+function TimeFrameSelector({ onTimeFrameChange, informationTitle }) {
 
     const today = new Date();
     const year = today.getFullYear();
@@ -51,7 +52,7 @@ function TimeFrameSelector({ onTimeFrameChange }) {
 
     return (
         <div>
-            <InformationTip information={"<ul> <li><strong>Default:</strong> From 2018 to Present Day</li>  <li><strong>Functionality:</strong> specify a time frame to see tweets from.</li> </ul>"} />
+            <InformationTip title={informationTitle} information={"<ul> <li><strong>Default:</strong> From 2018 to Present Day</li>  <li><strong>Functionality:</strong> specify a time frame to see tweets from.</li> </ul>"} />
             <div className="time-frame-selector clearfix">
                 <label>
                     <input

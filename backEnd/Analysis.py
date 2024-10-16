@@ -44,7 +44,7 @@ class Analysis:
                 start_date_str, end_date_str = time_frame
                 start_date = datetime.strptime(start_date_str, "%Y-%m-%d")
                 end_date = datetime.strptime(end_date_str, "%Y-%m-%d")
-                query['time'] = {'$gte': start_date, '$lt': end_date}
+                query['time'] = {'$gte': start_date, '$lte': end_date}
 
             if counties:
                 query["location"] = {"$in": counties}

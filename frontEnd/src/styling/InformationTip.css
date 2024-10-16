@@ -2,6 +2,7 @@
 .tooltip {
     position: relative;
     display: inline-block;
+    text-align: center;
 }
 
 .tooltip .tooltip-text {

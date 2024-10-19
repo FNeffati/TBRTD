@@ -24,12 +24,12 @@ function TimeFrameSelector({ onTimeFrameChange, informationTitle }) {
     const todayFormatted = `${year}-${month}-${day}`;
 
     // State for start and end dates
-    const [startDate, setStartDate] = useState('2018-06-30');
+    const [startDate, setStartDate] = useState('2018-01-01');
     const [endDate, setEndDate] = useState(todayFormatted);
 
     // Minimum date for start and end dates
     // This controls how far forward and back you can scroll 
-    const minDate = '2018-06-30';
+    const minDate = '2018-01-01';
     const maxDate = todayFormatted;
 
     /**

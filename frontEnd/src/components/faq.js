@@ -26,77 +26,52 @@ const FAQ = () => {
                     <h2>Main Components</h2>
                     <h3>1) Filters to select tweets of interest</h3>
                     <p>
-                        Results for all tweets in the database are shown when the dashboard is first loaded. These
-                        include over 50,000 tweets that were obtained from Twitter using search terms descriptive
-                        of red tide (e.g. “red tide”, “Karenia brevis”) relevant for a five-county area around
-                        Tampa Bay (Hillsborough, Manatee, Pasco, Pinellas, and Sarasota Counties).
-                    </p>
-                    <p>
-                        Users can filter the tweets to evaluate those of interest, including filters by date,
-                        word cloud terms, county, account type, and retweets. By default, only original tweets 
-						(no retweets) in the database are shown and the filters that include a categorical description 
-						(word cloud, county, account type, retweets) will not show a checkmark by each category 
-						indicating all are selected by default. Further filtering by categories will show a check mark 
-						for one to any of the categories. Removing all checkmarks for a filter will default back to all.
-                    </p>
-                    <p>
-                        The date range filter will select all tweets within the start and end date selected.
-                        Clicking on the start or end date will show an additional menu where the user can further
-                        refine their date search by year, month, and day.
+                        Results for all tweets in the database are shown when the dashboard is first loaded.
+                        These include over 63,000 tweets that were obtained from Twitter using search terms 
+                        descriptive of red tide (e.g. “red tide”, “Karenia brevis”) relevant for a five-county area
+                        around Tampa Bay (Hillsborough, Manatee, Pasco, Pinellas, and Sarasota Counties).
+                        Users can filter the tweets, accounts and metrics to obtain the insights of interest.
+                        Those filters include:  
                     </p>
                     <img src={require('../assets/Filters.png')} style={{width:'70%'}}/>
+                    <p>
+                        <li>
+                            <strong>Time Frame:</strong> Specifying the date range when tweets occurred. It defaults to the entire time span covered by the project (2018 - Oct 2024). 
+                        </li>
+                        <strong>NOTE:</strong> it doesn’t allow for typing the numbers in, hence one needs to use the point-and-click approach to pick the date.
+
+                        
+                        <li>
+                            <strong>Word Cloud Type:</strong> The type of information to be displayed on the word cloud. It defaults to showing frequency of mentions 
+                            for single words that are not referring to a geographical location (e.g. Tampa, Pinellas, etc), or “non-geo” terms as we’ll be calling them.
+                            See “Graphical Displays” - “Word Clouds” section below for more details.
+                        </li>
+                        
+                        <li>
+                            <strong>County:</strong> The county that was mentioned in the tweet. Defaults to all five counties being selected 
+                            (Hillsborough, Manatee, Pasco, Pinellas, Sarasota), but allows users to pick just one, or a subset of those. 
+                        </li>
+                        <strong>NOTE:</strong> Picking a certain county would result in filtering for tweets that were about that county, not tweets originating from that county.
+
+                        <li>
+                            <strong>Account Type:</strong> Selecting a particular account type (one of the following: academic, government, media, tourism, other) 
+                            will filter for tweets that came only from user accounts of that type. Defaults to all five account types being included, 
+                            but allows users to pick just one, or a subset of those. Please see this paper for additional information on how account 
+                            types were assigned to each Twitter/X account in the database. 
+                        </li>
+                        <strong>NOTE:</strong> “Other” indicates predominantly regular citizens, hence might be of utmost interest in case
+                        one wants to study the general public’s tweets.
+
+                        <li>
+                            <strong>With/Without Retweets:</strong> Whether to include retweets, or exclude them and focus on original posts and replies. 
+                            By default, the retweets are excluded, hence only original tweets in the database are shown.
+                        </li>
+                    </p>
                     <h3>2) Graphical displays for the filtered tweets</h3>
                     <p>
-                        The dashboard includes four graphical displays that present summaries of the selected
-                        tweets. Each of these displays will respond to any changes made to the filters described
-                        above. Please see the following.
+                        The dashboard includes four graphical displays that present summaries of the selected tweets: Tweet Scroller, Word Cloud, Heatmap,
+                        Time Series. For detailed description of each, see the “Graphical Displays” section below.
                     </p>
-                </section>
-
-                <section>
-                    <h2>Tweet Filters</h2>
-                    <p>
-                        The word cloud filter can be used to display commonly used terms in the tweets. The
-                        filters distinguish terms that are hashtags or not and if the originating tweet was
-                        geographically referenced. Hashtags are terms used to index or reference particular topics
-                        on Twitter/X. Tweets that are geographically referenced include an explicit location
-                        chosen by the user when the tweet is posted. Tweets that are not geographically referenced
-                        were assigned to counties based on contextual information in the tweet. The terms are
-                        grouped in the following categories:
-                    </p>
-					<ul>
-                        <li>
-                            <strong>Geo Hashtags:</strong> Hashtags that have to do with geographical areas (e.g.
-                            #Tampa, #SiestaKey, etc)
-                        </li>
-                        <li>
-                            <strong>Non Geo Hashtags:</strong> Hashtags that have to do with anything but the
-                            geographical areas (e.g. #deadfish, #manatees).
-                        </li>
-                        <li>
-                            <strong>Geo Single Terms:</strong> All the terms (not just the hashtags) that have to do
-                            with geographical areas
-                        </li>
-                        <li>
-                            <strong>Non Geo Single Terms:</strong> All the terms (not just the hashtags) that have
-                            to do with anything but the geographical areas
-                        </li>
-                    </ul>
-					<p>
-                        The geographical areas mentioned in tweets can be using the county filter for any
-                        of the five counties mentioned above. NOTE: Those indicate that the tweets were about the
-                        county, not that they came from that county.
-                    </p>
-					<p>
-                        The account type filter will select tweets for accounts assigned to one of five different
-                        categories: academic, government, media, tourism, and other. Please see <a href={'https://journals.flvc.org/FLAIRS/article/view/135551'} target="_blank">this paper</a> for
-                        additional information on how account types were assigned to each Twitter/X account in the
-                        database.
-                    </p>
-					<p>
-						Finally, the retweet filter will select original tweets or original tweets with retweets. 
-						By default, only original tweets are shown.
-					</p>
                 </section>
 
                 <section>
@@ -137,9 +112,8 @@ const FAQ = () => {
                         <img src={require('../assets/scroller.png')} style={{width:"35%", alignSelf:'flex-end'}} alt={'Tweet Scroller'}/>
                     </div>
                     <p>
-                        Only ten tweets are displayed at a time and the button on the bottom of the scroller can
-                        be used to cycle through the tweets by advancing ten tweets at a time or by jumping to a
-                        selected page.
+                        The buttons above and below the scroller can be used to navigate through the pages of tweets. 
+                        Alternativley the user can put in a desired page number to jump to those results. 
                     </p>
                 </section>
 
@@ -154,19 +128,24 @@ const FAQ = () => {
                             by popup text when mousing over a word. Additionally, the tweet scroller can be filtered
                             to all tweets that contain the term or hashtag by clicking on a word in the word cloud.
                             This will autofill the text filter in the tweet scroller with the selected word.
+                        
+                            <li>
+                                <strong>NOTE:</strong> By clicking on a word in the word cloud, the tweet scroller will be 
+                                filtered to all tweets that contain that word. This will autofill the text filter in the
+                                tweet scroller with the selected word/hashtag.
+
+                            </li>
+                            <li>
+                                <strong>NOTE:</strong> There is also a list of “stopwords” that were removed from consideration
+                                 by the word clouds, which mostly include frequently occurring words that don’t convey as much 
+                                 information by themselves (e.g. articles, pronouns, etc).
+                            </li>
+                            <li>
+                                <strong>NOTE:</strong> Word cloud responds to all five filters described in the “Main Components” 
+                                section (Time Frame, Word Cloud Type, County, Account Type, With/Without Retweets).
+                            </li>
                         </p>
                     </div>
-					<p>
-					There are <b>three types of word clouds</b> presented in this dashboard: <b>Single Term</b>, 
-					<b>Single User</b>, and <b>Hashtag</b> Word Clouds. Each of these types can also be filtered 
-					by non geo or geo-tagged tweets that do not or do include an explicit geographic location, 
-					respectively.  Non geo-tagged tweets are assigned a location based on tweet content, rather 
-					than an explicit tag.  The Single Term Word Clouds reflect how frequently a term (either 
-					a hashtag or a regular word) has been mentioned. The Single User Word Clouds reflect how many 
-					individual users mentioned that term, helping reduce the impact of spam and frequent retweeting 
-					of the term by same users. The Hashtag Word Cloud reflects how frequently a hashtag has been 
-					mentioned, disregarding any non-hashtag terms.
-					</p>
                 </section>
 
                 <section>
@@ -175,9 +154,13 @@ const FAQ = () => {
                         <p style={{width:"50%", alignSelf: 'center'}}>
                             The map provides a spatial summary of tweet volume by each of the five counties. The
                             counties are colored using a gradient from white to red, where the intensity of red
-                            increases with more tweets. This can provide a quick visual summary of where tweet
-                            activity is most intense for a selected time period and user account. Note that the county
+                            increases with more tweets. Note that the county
                             filter will not change the map appearance as all counties are shown by default.
+
+                            <li>
+                                <strong>NOTE:</strong> The counts that pop up upon hovering over a certain county represent the number of 
+                                filtered tweets that were about that county, not tweets originating from that county.
+                            </li>
                         </p>
                         <img src={require('../assets/heatmap.png')} style={{width:"50%", alignSelf:'flex-start'}} alt={'Tweet Scroller'}/>
                     </div>

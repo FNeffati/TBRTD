@@ -21,7 +21,7 @@ function MainApp() {
 
 
     const [selectedFilters, setSelectedFilters] = useState({
-        timeFrame: "2018-06-30 2024-08-23",
+        timeFrame: "2018-01-01 2024-08-23",
         accountType: [],
         county: [],
         wordCloud: [],

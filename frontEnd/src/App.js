@@ -19,6 +19,20 @@ function MainApp() {
     const Word_Cloud_Options = ['Non Geo Single Terms', 'Non-Geo Single User', "Non-Geo Hashtags", 'Geo Single Terms', 'Geo Single User', "Geo Hashtags"];
     const Tweet_Filter_Options = ["With Retweets", "Without Retweets"];
 
+    useEffect(() => {
+        // Add Google Analytics script tag dynamically
+        const script = document.createElement('script');
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-X55VJPC56Q";
+        script.async = true;
+        document.head.appendChild(script);
+    
+        // Initialize Google Analytics
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ window.dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-X55VJPC56Q');
+        
+      }, []);
 
     const [selectedFilters, setSelectedFilters] = useState({
         timeFrame: "2018-01-01 2024-08-23",
@@ -179,6 +193,22 @@ function MainApp() {
 }
 
 function App() {
+
+    useEffect(() => {
+        // Add Google Analytics script tag dynamically
+        const script = document.createElement('script');
+        script.src = "https://www.googletagmanager.com/gtag/js?id=G-X55VJPC56Q";
+        script.async = true;
+        document.head.appendChild(script);
+    
+        // Initialize Google Analytics
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ window.dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-X55VJPC56Q');
+        
+      }, []);
+
     return (
     <div>
         <nav>

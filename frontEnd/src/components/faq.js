@@ -33,37 +33,38 @@ const FAQ = () => {
                         Users can filter the tweets, accounts and metrics to obtain the insights of interest.
                         Those filters include:  
                     </p>
-                    <img src={require('../assets/Filters.png')} style={{width:'70%'}}/>
+                    <img className="filterPic" src={require('../assets/Filters.png')} style={{width:'95%'}}/>
                     <p>
                         <li>
-                            <strong>Time Frame:</strong> Specifying the date range when tweets occurred. It defaults to the entire time span covered by the project (2018 - Oct 2024). 
+                            <strong className="headerText" >Time Frame:</strong> Specifying the date range when tweets occurred. It defaults to the entire time span covered by the project (2018 - Oct 2024). 
+                            <strong> NOTE:</strong> it doesn’t allow for typing the numbers in, hence one needs to use the point-and-click approach to pick the date.
                         </li>
-                        <strong>NOTE:</strong> it doesn’t allow for typing the numbers in, hence one needs to use the point-and-click approach to pick the date.
 
                         
                         <li>
-                            <strong>Word Cloud Type:</strong> The type of information to be displayed on the word cloud. It defaults to showing frequency of mentions 
+                            <strong className="headerText" >Word Cloud Type:</strong> The type of information to be displayed on the word cloud. It defaults to showing frequency of mentions 
                             for single words that are not referring to a geographical location (e.g. Tampa, Pinellas, etc), or “non-geo” terms as we’ll be calling them.
                             See “Graphical Displays” - “Word Clouds” section below for more details.
                         </li>
                         
                         <li>
-                            <strong>County:</strong> The county that was mentioned in the tweet. Defaults to all five counties being selected 
+                            <strong className="headerText" >County:</strong> The county that was mentioned in the tweet. Defaults to all five counties being selected 
                             (Hillsborough, Manatee, Pasco, Pinellas, Sarasota), but allows users to pick just one, or a subset of those. 
+                            <span className="warningText"><strong> NOTE:</strong> Picking a certain county would result in filtering for tweets that were about that county, not tweets originating from that county.</span>
                         </li>
-                        <strong>NOTE:</strong> Picking a certain county would result in filtering for tweets that were about that county, not tweets originating from that county.
+                        
 
                         <li>
-                            <strong>Account Type:</strong> Selecting a particular account type (one of the following: academic, government, media, tourism, other) 
+                            <strong className="headerText" >Account Type:</strong> Selecting a particular account type (one of the following: academic, government, media, tourism, other) 
                             will filter for tweets that came only from user accounts of that type. Defaults to all five account types being included, 
-                            but allows users to pick just one, or a subset of those. Please see this paper for additional information on how account 
+                            but allows users to pick just one, or a subset of those. Please see <a href={'https://journals.flvc.org/FLAIRS/article/view/135551'} target="_blank">this paper</a> for additional information on how account 
                             types were assigned to each Twitter/X account in the database. 
+                            <strong> NOTE:</strong> “Other” indicates predominantly regular citizens, hence might be of utmost interest in case
+                            one wants to study the general public’s tweets.
                         </li>
-                        <strong>NOTE:</strong> “Other” indicates predominantly regular citizens, hence might be of utmost interest in case
-                        one wants to study the general public’s tweets.
 
                         <li>
-                            <strong>With/Without Retweets:</strong> Whether to include retweets, or exclude them and focus on original posts and replies. 
+                            <strong className="headerText" >With/Without Retweets:</strong> Whether to include retweets, or exclude them and focus on original posts and replies. 
                             By default, the retweets are excluded, hence only original tweets in the database are shown.
                         </li>
                     </p>
@@ -75,8 +76,8 @@ const FAQ = () => {
                 </section>
 
                 <section>
-                    <h2>Graphical Displays</h2>
-                    <h3>Tweet Scroller</h3>
+                    <h3>Graphical Displays</h3>
+                    <h2 className="titleText">Tweet Scroller</h2>
                     <div style={{display:'flex', flexDirection:"row"}}>
                         <p style={{width:"50%", alignSelf: 'center'}}>
                             This shows each tweet that applies to the selected filters, including the username, tweet
@@ -103,7 +104,9 @@ const FAQ = () => {
                                     Finally, the order of the tweets can be changed using the right drop-down menu. By
                                     default, the tweet scroller is arranged with date descending, where the most recent
                                     tweet is shown first. This option can be changed to show date ascending or to order the
-                                    tweets by most liked, most retweeted, or most replies.
+                                    tweets by most liked, most retweeted, or most replies. The buttons above and below the 
+                                    scroller can be used to navigate through the pages of tweets. Alternativley the user can
+                                    put in a desired page number to jump to those results. 
                                 </li>
                             </ul>
 
@@ -111,14 +114,10 @@ const FAQ = () => {
 
                         <img src={require('../assets/scroller.png')} style={{width:"35%", alignSelf:'flex-end'}} alt={'Tweet Scroller'}/>
                     </div>
-                    <p>
-                        The buttons above and below the scroller can be used to navigate through the pages of tweets. 
-                        Alternativley the user can put in a desired page number to jump to those results. 
-                    </p>
                 </section>
 
                 <section>
-                    <h3>Word Cloud</h3>
+                    <h2 className="titleText">Word Cloud</h2>
                     <div style={{display:'flex', flexDirection:"row"}}>
                         <img src={require('../assets/wordcloud.png')} style={{Width:"50%", alignSelf:'flex-start'}} alt={'Tweet Scroller'}/>
                         <p style={{width:"50%", alignSelf: 'center'}}>
@@ -149,7 +148,7 @@ const FAQ = () => {
                 </section>
 
                 <section>
-                    <h3>Map</h3>
+                    <h2 className="titleText">Map</h2>
                     <div style={{display:'flex', flexDirection:"row"}}>
                         <p style={{width:"50%", alignSelf: 'center'}}>
                             The map provides a spatial summary of tweet volume by each of the five counties. The
@@ -158,8 +157,9 @@ const FAQ = () => {
                             filter will not change the map appearance as all counties are shown by default.
 
                             <li>
-                                <strong>NOTE:</strong> The counts that pop up upon hovering over a certain county represent the number of 
+                                <span className="warningText"><strong>NOTE:</strong> The counts that pop up upon hovering over a certain county represent the number of 
                                 filtered tweets that were about that county, not tweets originating from that county.
+                                </span>
                             </li>
                         </p>
                         <img src={require('../assets/heatmap.png')} style={{width:"50%", alignSelf:'flex-start'}} alt={'Tweet Scroller'}/>
@@ -167,10 +167,10 @@ const FAQ = () => {
                 </section>
 
                 <section>
-                    <h3>Time Series Plot</h3>
+                    <h2 className="titleText">Time Series Plot</h2>
                     <div style={{display:'flex', flexDirection:"row"}}>
                         <img src={require('../assets/Timeseries.gif')} style={{width:"50%", alignSelf:'flex-start'}} alt={'Tweet Scroller'}/>
-                        <p style={{width:"50%", alignSelf: 'center'}}>
+                        <p style={{width:"50%", alignSelf:"center"}}>
                             The time series plot shows tweet volume by county over time. Mousing over the plot will
                             show a text summary of the number of tweets originating from each county on a given date.
                             The plot can also be zoomed by holding the left mouse button and dragging to a time period
@@ -179,6 +179,16 @@ const FAQ = () => {
 							The time series plot can also be filtered to include tweets with specific words or
 							phrases from the text entry box above the plot. Evaluating volume by county can also 
 							suggest spatial changes in bloom impacts over time.
+
+                            Additionally, the time series plot can also be filtered to only reflect tweets that included 
+                            mentions of specific words or phrases from the text entry box above the plot. Evaluating volume
+                            by county can also suggest spatial changes in bloom impacts over time.
+                            
+                            <li>
+                                <strong> NOTE:</strong> The time series does not respond to the <strong>Time Frame and County Filters</strong>,
+                                as it always depicts all five counties over the whole time span of the project on the x-axis 
+                                (2018-2024). It only responds to the Account Type and With/Without Retweets filters.
+                            </li>
                         </p>
                     </div>
                 </section>

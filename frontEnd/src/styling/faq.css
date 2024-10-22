@@ -78,9 +78,21 @@ a:hover {
 }
 
 .image-container img {
-    max-width: 200px; /* Set the maximum width of the images */
+    max-width: 300px; /* Set the maximum width of the images */
     height: auto; /* Maintain aspect ratio */
     border: 1px solid #ddd; /* Optional: Add a border around the images */
     border-radius: 8px; /* Optional: Add rounded corners */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow */
+}
+
+.headerText {
+    font-size: 22px;
+}
+
+.warningText {
+    color: red;
+}
+
+.titleText {
+    font-size: 36px;
 }

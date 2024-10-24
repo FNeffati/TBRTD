@@ -122,6 +122,21 @@ const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
                 });
             });
 
+            // Fill in missing dates with zeros
+            const allDates = Object.keys(dyData).map(date => new Date(date)).sort((a, b) => a - b);
+            const startDate = allDates[0];
+            const endDate = allDates[allDates.length - 1];
+            const currentDate = new Date(startDate);
+
+            while (currentDate <= endDate) { // Loop through all dates between start and end date
+                const formattedDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+                if (!dyData[formattedDate]) {
+                    // Add a zeroed-out entry for the missing date
+                    dyData[formattedDate] = [formattedDate, 0, 0, 0, 0, 0];
+                }
+                currentDate.setDate(currentDate.getDate() + 1); // Increment date
+            }
+
             const finalData = Object.values(dyData);
 
             // Sort the data by date
@@ -134,7 +149,9 @@ const TwitterTimeSeries = ({ account_types, retweetFilter }) => {
                 rollPeriod: 0,
                 width: 750,
                 height: 550,
-                pixelsPerLabel: 40,
+                pixelsPerLabel: 50,
+                includeZero: true,
+                connectSeparatedPoints: false,
                 colors: ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd'],
             });
         }

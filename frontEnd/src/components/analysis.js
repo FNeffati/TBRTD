@@ -174,6 +174,7 @@ class Util {
         "florida", "swfl", "floridas", "manateecounty", "annamariaisland", "siestakey", "stpete", "sanibel", "everglades",
         "fortmyersbeach","manasotakey", "sarasotabay", "fortmyers", "lakeokeechobee", "bradentonbeach","formyers", "bocagrande",
         "siesta", "florda", "srq", "sarastoabay", "stpetersburg", "tampabay", "pinellascounty", "pineypoint", "clearwaterbeach",
+        "piney", "pineypoint", "#sarasota", '#florida', '#tampabay',
         "capecoral", "gulfofmexico","portcharlotte",""].map(location => location.toLowerCase());
 
     static stopWords = ['@govrondesantis', 'raw', 'septic', 'chemicals', 'discharges', 'discharge', 'storm water', 'algae',
@@ -182,8 +183,8 @@ class Util {
         'lake', 'chemical', 'leaking', 'beach', 'petroleum', 'lyngbya', 'kbrevis', 'dumping',
         'discharging', 'gulf', 'untreated', 'pump', 'spill', 'river', 'contaminating',
         'waterway', 'leaked', 'cyanotoxins', 'spilling', 'dump', 'contamination', 'spills',
-        'ocean', 'linbya', 'red algae', 'red tide', 'lyngbia', 'harmful', 'bluegreenalgae',
-        'toxicalgae', 'leaks', 'tar balls', 'kareniabrevis', 'harmfulalgae', 'spilled',
+        'ocean', 'linbya', 'red algae', 'red tide', '#redtide', 'lyngbia', 'harmful', 'bluegreenalgae',
+        'toxicalgae', 'leaks', 'tar balls', 'karenia', 'brevis', 'kareniabrevis', 'harmfulalgae', 'spilled',
         'contaminants', 'linbia', 'beaches', 'oil spill', 'industrial spill', 'red tides',
         'dapis', 'wastewater', 'stormwater', 'reclaim water', 'leakage', 'bloom',
         'algae bloom', 'blue green algal', 'raw sewage', 'oil leaks', 'oil spillage', 'county', 'hillsborough',
@@ -200,7 +201,8 @@ class Util {
         'gillum', 'kriseman', 'richard kriseman', 'ken welch', 'george cretekos', 'cretekos', 'buckhorn', 'bob buckhorn',
         'jane castor', 'janecastor', 'castor', 'john holic', 'john holic', 'holic', 'ron feinsod', 'twitter', 'status', 'rickscott', 'rick',
         'redtiderick', 'redtideron', 'removeron', 'trumpmaga', 'gillumforgovernor', 'deathdesantis', 'maga', 'qanon', 'rondeathsantis', 
-        'trumptampa', 'rondesantes', 'demvoice1', 'notscott', 'arresttrumpnow', 'justiceforcamerinherrin',
+        'trumptampa', 'rondesantes', 'demvoice1', 'notscott', 'arresttrumpnow', 'justiceforcamerinherrin', '#justiceforcameronherrin',
+        '#cameronherrin', '#justiceforcamerinherrin',  
 
         "x", "a", "a's", "about", "above", "according", "accordingly", "across", "actually", "after", "afterwards", "again", "against", "ain't", "all", "almost",
         "alone", "along", "already", "also", "although", "always", "am", "among", "amongst", "an", "and", "another", "any", "anybody",
@@ -241,7 +243,9 @@ class Util {
         "today", "wanted", "wanting", "ways", "amp", "aint", "arent", "cmon", "cs", "couldnt", "didnt", "doesnt", "dont", "hadnt",
         "hasnt", "havent", "hes", "heres", "id", "ill", "im", "ive", "isnt", "itd", "itll", "shouldnt", "ts", "theyd", "theyll",
         "theyre", "theyve", "wasnt", "wed", "weve", "werent", "whats", "wheres", "whos", "wont", "wouldnt", "youd", "youll",
-        "youre", "youve", "shes", "hed", "shed", "hell", "shell", "shant", "mustnt", "whens", "whys", "hows", "ten", "fourth"
+        "youre", "youve", "shes", "hed", "shed", "hell", "shell", "shant", "mustnt", "whens", "whys", "hows", "ten", "fourth",
+        "doesn", "don", "isn", "wasn", "weren", "won", "wouldn", "ain", "aren", "couldn", "didn", "doesn", "hadn", "hasn", 'est',
+        "1222", "222", "800", '600', '18002221222', 
     ];
 
     static expandLocationList(locations) {
@@ -299,7 +303,7 @@ class Util {
         const urlRegex = /https?:\/\/\S+/g;
         const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
         const usernamePattern = /@[A-Za-z0-9._-]+/g;
-        const punctuationPattern = /[^\w\s]|_/g;
+        const punctuationPattern = /[^\w\s#]/g;
     
         // Convert stop words and locations into Sets for faster lookups
         const stopWordsSet = new Set(Util.stopWords);
@@ -319,7 +323,11 @@ class Util {
         const words = flattenedText.split(/\s+/);
     
         // Filter out stop words and location words
-        const filteredWords = words.filter(word => !stopWordsSet.has(word) && !locationsSet.has(word));
+        const filteredWords = words.filter(word => 
+            (word.startsWith('#') || word.length > 2) && 
+            !stopWordsSet.has(word) && 
+            !locationsSet.has(word)
+        );
     
         return Util.countWords(filteredWords);
     }
@@ -333,7 +341,7 @@ class Util {
         const urlRegex = /https?:\/\/\S+/g;
         const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
         const usernamePattern = /@[A-Za-z0-9._-]+/g;
-        const punctuationPattern = /[^\w\s]|_/g;
+        const punctuationPattern = /[^\w\s#]|_/g;
     
         // Convert stop words and locations into Sets
         const stopWordsSet = new Set(Util.stopWords);
@@ -352,7 +360,7 @@ class Util {
         const words = flattenedText.split(/\s+/);
     
         // Filter words: remove stop words and keep only location words
-        const filteredWords = words.filter(word => !stopWordsSet.has(word) && locationsSet.has(word));
+        const filteredWords = words.filter(word => !stopWordsSet.has(word) && locationsSet.has(word) && word.length > 2);
     
         return Util.countWords(filteredWords);
     }
@@ -426,7 +434,7 @@ class Util {
         const urlPattern = /https?:\/\/\S+/gi;
         const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
         const usernamePattern = /@[A-Za-z0-9._-]+/g;
-        const punctuationPattern = /[^\w\s]|_/g;
+        const punctuationPattern = /[^\w\s#]|_/g;
         const { removeStopwords } = require('stopword');
     
         // Convert stop words and locations into Sets for faster lookups
@@ -449,7 +457,7 @@ class Util {
     
             // Split text into words and filter only location words
             const words = removeStopwords(text.split(/\s+/).filter(word => 
-                !stopWordsSet.has(word) && locationsSet.has(word)
+                !stopWordsSet.has(word) && locationsSet.has(word) && word.length > 2
             ));
     
             // If there are valid location words, process them
@@ -478,7 +486,7 @@ class Util {
         const urlPattern = /(https?:\/\/[^\s]+|www\.[^\s]+|httpst?[^\s]+)/gi;
         const RTPattern = /RT\s+@[A-Za-z0-9._-]+:/gi;
         const usernamePattern = /@[A-Za-z0-9._-]+/g;
-        const punctuationPattern = /[^\w\s]|_/g;
+        const punctuationPattern = /[^\w\s#]|_/g;
         const { removeStopwords } = require('stopword');
     
         // Convert stop words and locations into Sets for faster lookups 
@@ -501,7 +509,7 @@ class Util {
     
             // Filter out stop words and location words in one go
             const words = removeStopwords(text.split(/\s+/)).filter(word => 
-                !stopWordsSet.has(word) && !locationsSet.has(word)
+                !stopWordsSet.has(word) && !locationsSet.has(word) && word.length > 2
             );
     
             // Update word-user mapping

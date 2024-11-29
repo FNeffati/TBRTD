@@ -13,3 +13,11 @@
 .bodyText {
     text-align: left;
 }
+
+.disclaimer {
+    margin-top: 0;
+    font-size: 14px;
+    text-align: center;
+    font-style: italic;
+    font-weight: bold;
+}

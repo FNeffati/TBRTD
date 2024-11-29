@@ -10,6 +10,7 @@ const Header = () => {
                     <ul className="bodyText">
                         <strong>Objective:</strong> Our goal is to collect, analyze, and present publicly available twitter data to users in a digestible way. <br/>
                         <strong>Source of Data:</strong> All of these tweets are collected from X due to them pertaining/mentioning Red Tide and/or the Tampa Bay area 5 Key counties.
+                        <p className="disclaimer">For ideal perfomance and layout, please use on a laptop or desktop PC.</p>
                     </ul>
                 </p>
             </header>

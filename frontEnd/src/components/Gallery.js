@@ -15,7 +15,7 @@ const GallerySwitch = ({ date, account_types, retweetFilter }) => {
                     <Component1 date={date} account_types={account_types} retweetFilter={retweetFilter} className="map"/>
                 </div>
                 <div className="Component2">
-                    <ContentHeader title={"Time Series"} content={"Click and drag on a section to zoom in closer. Double click to reset view. Use search to focus on a given word or phrase."} filters={"Affected by account type and retweet filters."}/>
+                    <ContentHeader title={"Time Series"} content={"Click and drag on a section to zoom in closer. Double click to reset view. Use search to focus on a given word or phrase. To get the exact tweet counts for each county, hover over the respective part of the graph"} filters={"Affected by account type and retweet filters."}/>
                     <Component2 account_types={account_types} retweetFilter={retweetFilter} className="ts"/>
                 </div>
             </div>

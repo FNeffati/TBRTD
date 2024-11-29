@@ -100,6 +100,13 @@
     overflow-y: auto;
 }
 
+/* Makes tweet scroller small on medium and below sizes */
+@media screen and (max-width: 1600px) { 
+    .tweets_container {
+        max-height: 425px;
+    }
+}
+
 .pagination {
     display: flex;
     justify-content: center;

@@ -6,6 +6,10 @@
     position: relative;
 }
 
+.leaflet-interactive {
+    cursor: default !important;
+}
+
 .tooltip-wrap {
     position: relative;
 }
@@ -29,6 +33,7 @@
     border-radius: 5px;
     border-style: solid;
     border-width: 1px;
+    cursor: default;
 }
 
 .map-hover-popup {

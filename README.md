@@ -3,6 +3,15 @@
 A Dashboard made to help people, researchers, etc be informed about anything red tide. 
 Funded by the Tampa Bay Estuary Program and developed at New College of Florida. 
 
+## Project layout 
+- `/src` is the root of the project directory
+  - `/src/fronted` contains all front end components, this includes all HTML, CSS, and JS 
+  - `/src/backend` contains all of the pieces of the backend, this includes the server script as well as tools for updating the database. 
+
+----
+
+# Overview 
+
 **Data Description**:
 All the data is publicly available data retrieved on a weekly basis from X.com (previously Twitter). 
 
